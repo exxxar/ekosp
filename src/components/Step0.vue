@@ -29,9 +29,7 @@
             <div class="form-group">
                 <input name="phone"
                        v-model="form.phone"
-                       pattern="[\+]\d{2} [\(]\d{3}[\)] \d{3}[\-]\d{2}[\-]\d{2}"
                        maxlength="19"
-                       v-mask="['+38 (###) ###-##-##']"
                        type="text"
                        class="form-control input-lg"
                        placeholder="Номер телефона" required>
@@ -51,7 +49,7 @@
                 <input name="invite"
                        v-model="form.invite"
                        type="text"
-                       pattern="[AM0-9]{1,2}"
+                       pattern="[AM].[0-9]{1,2}"
                        maxlength="19"
                        v-mask="['A ##']"
                        class="form-control input-lg"
