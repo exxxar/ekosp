@@ -79,7 +79,7 @@
 
             <div class="row itogblue">
                 <div class="col-md-5">Итоговые инвестиции хозяйства:</div>
-                <div class="col-md-3"><span>{{currentVolume}}</span> л</div>
+                <div class="col-md-3"><span>{{currentVolume.toFixed(2)}}</span> л</div>
                 <div class="col-md-3"><span>{{(currentVolume*basePrice).toFixed(2)}}</span> руб</div>
             </div>
             <div class="row itogblue">
