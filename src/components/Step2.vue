@@ -1,5 +1,5 @@
 <template>
-    <form v-on:submit.prevent="submit" class="flex-wrap d-flex justify-content-center">
+    <form v-on:submit.prevent="submit" class="flex-wrap d-flex justify-content-center mb-5">
 
         <h2 class="w-100">ШАГ 2: Расчет стоимости препарата «ЭКО-СП»</h2>
 
@@ -8,8 +8,7 @@
             <div class="col-md-5">
                 <div class="input-group mb-3">
                     <input name="humiccost"
-                           :disabled="true"
-                           :value="basePrice"
+                           v-model="humic_price"
                            class="form-control input-lg">
                     <div class="input-group-append">
                         <span class="input-group-text">руб/л</span>
@@ -30,7 +29,7 @@
 
         <div class="row w-100">
             <div class="col-md-6 discountblock">
-                <h4>Ваш объём: <span>{{currentVolume}}</span> л</h4>
+                <h4>Ваш объём: <span>{{currentVolume.toFixed(2)}}</span> л</h4>
                 <ul class="dis1">
                     <li v-for="dis in volume_discount_list">
                         <p v-if="dis.to_vol!=null"><span :style="selectColor(dis)">{{dis.discount}}%</span> - от
@@ -45,7 +44,7 @@
 
                 <div class="volume text-left">
                     <p>Цена за литр продукции:<br><span>{{basePrice}}</span> руб</p>
-                    <p>Стоимость объёма продукции с учетом скидки:<br><span>{{basePrice*currentVolume}}</span> руб</p>
+                    <p>Стоимость объёма продукции с учетом скидки:<br><span>{{(basePrice*currentVolume).toFixed(2)}}</span> руб</p>
                 </div>
 
 
@@ -100,7 +99,7 @@
 
                 <div class="volume text-left">
                     <p>Цена за литр продукции:<br><span>{{basePrice}}</span> руб</p>
-                    <p>Стоимость объёма продукции с учетом скидки:<br><span>{{basePrice*currentVolume}}</span> руб</p>
+                    <p>Стоимость объёма продукции с учетом скидки:<br><span>{{(basePrice*currentVolume).toFixed(2)}}</span> руб</p>
                 </div>
 
 
@@ -125,7 +124,7 @@
 
                 <div class="volume text-left">
                     <p>Цена за литр продукции:<br><span>{{basePrice}}</span> руб</p>
-                    <p>Стоимость объёма продукции с учетом скидки:<br><span>{{basePrice*currentVolume}}</span> руб</p>
+                    <p>Стоимость объёма продукции с учетом скидки:<br><span>{{(basePrice*currentVolume).toFixed(2)}}</span> руб</p>
                 </div>
 
 
@@ -158,7 +157,7 @@
 
                 <div class="volume text-left">
                     <p>Цена за литр продукции:<br><span>{{basePrice}}</span> руб</p>
-                    <p>Стоимость объёма продукции с учетом скидки:<br><span>{{basePrice*currentVolume}}</span> руб</p>
+                    <p>Стоимость объёма продукции с учетом скидки:<br><span>{{(basePrice*currentVolume).toFixed(2)}}</span> руб</p>
                 </div>
 
 
@@ -177,8 +176,8 @@
                 <p>Ваша цена за литр продукции:<br><span>{{basePrice}}</span> руб</p>
             </div>
             <div class="col-md-12">
-                Стоимость объёма продукции ({{currentVolume}}) с учётом
-                скидки:<br><span>{{basePrice * currentVolume}}</span> руб
+                Стоимость объёма продукции ({{currentVolume.toFixed(2)}} л.) с учётом
+                скидки:<br><span>{{(basePrice*currentVolume).toFixed(2)}}</span> руб
             </div>
         </div>
 
@@ -192,7 +191,7 @@
             </div>
         </div>
 
-        <div class="row d-flex justify-content-center mt-2 w-100">
+        <div class="row d-flex justify-content-center mt-2 w-100" v-if="is_show">
             <div class="col-md-8 col-sm-12">
 
                 <button type="submit" class="btn btn-primary w-100">ШАГ 3: Расчет экономической эффективности
@@ -240,11 +239,11 @@
     export default {
         data() {
             return {
-
+                is_show:true,
                 is_discount_for_AKKOR_members: false,
                 pay_method_discount: 0,
                 season_discount: 0,
-
+                humic_price: null,
                 form: {
                     name: '',
                     phone: '',
@@ -255,7 +254,9 @@
             }
         },
         watch: {
-
+            humic_price: function (newVal) {
+                return this.$store.dispatch("setBasePrice", newVal)
+            },
             is_discount_for_AKKOR_members: function (newVal) {
                 return this.$store.dispatch("setIsAkkorMember", newVal)
             },
@@ -287,7 +288,7 @@
                 return this.$store.getters.GetCurrentVolume;
             },
             basePrice: function () {
-                return this.$store.getters.GetBasePrice;
+                return this.$store.getters.GetBasePrice
             }
         },
         mounted() {
@@ -296,6 +297,8 @@
                 this.form.region = this.stepZero.region
                 this.form.phone = this.stepZero.phone
             }
+
+            this.humic_price = this.basePrice
 
         },
         methods: {
@@ -307,6 +310,7 @@
             },
             submit() {
                 this.$store.dispatch('setStepTwo', this.form)
+                this.is_show = false;
                 this.$emit("next-step")
             },
             sendMail() {

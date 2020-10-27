@@ -57,7 +57,7 @@
             </div>
         </div>
 
-        <button type="submit" class="btn btn-primary">ШАГ 1: Расчет необходимого объема препарата «ЭКО-СП»</button>
+        <button type="submit" class="btn btn-primary" v-if="is_show">ШАГ 1: Расчет необходимого объема препарата «ЭКО-СП»</button>
     </form>
 </template>
 <script>
@@ -66,6 +66,7 @@
     export default {
         data() {
             return {
+                is_show:true,
                 form: {
                     company: '',
                     region: '',
@@ -79,6 +80,7 @@
         methods: {
             submit() {
                 this.$store.dispatch('setStepZero', this.form)
+                this.is_show = false;
                 this.$emit("next-step")
             }
         },

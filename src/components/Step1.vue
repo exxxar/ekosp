@@ -10,7 +10,8 @@
             <div class="col-md-6 col-sm-12">
                 <div class="form-group need_vegetation">
                     <label class="checkbox-inline">
-                        <input type="checkbox" v-model="form.prepare.need_seed_preparation">Не проводить обработку
+                        <input type="checkbox" v-model="form.prepare.need_seed_preparation">Не проводить
+                        обработку
                         семян
                     </label>
                 </div>
@@ -29,7 +30,7 @@
                                min="0"
                                pattern="[0-9]{1,10}"
                                class="form-control input-lg"
-                               placeholder="Площадь посевов">
+                               placeholder="Площадь посевов" required>
                         <div class="input-group-append">
                             <span class="input-group-text">га</span>
                         </div>
@@ -98,7 +99,8 @@
                         </div>
                     </div>
 
-                    <div class="volume">Необходимый объём «ЭКО-СП»: <span>{{form.prepare.required_volume}}</span> л
+                    <div class="volume">Необходимый объём «ЭКО-СП»:
+                        <span>{{form.prepare.required_volume.toFixed(2)}}</span> л
                     </div>
                 </div>
             </div>
@@ -114,7 +116,7 @@
                     <input class="form-control input-lg"
                            v-model="form.crop_area"
                            type="number"
-                           placeholder="Площадь посевов">
+                           placeholder="Площадь посевов" required>
                     <div class="input-group-append">
                         <span class="input-group-text">га</span>
                     </div>
@@ -134,7 +136,7 @@
                     <div class="input-group mb-3">
                         <input name="seedsnorm" type="text" class="form-control input-lg"
                                placeholder="Норма расхода рабочего раствора" v-model="vegetation.seeding_rate"
-                               v-on:keyup="onChangeVegetation(index)">
+                               v-on:keyup="onChangeVegetation(index)" required>
                         <div class="input-group-append">
                             <span class="input-group-text">л/га</span>
                         </div>
@@ -165,12 +167,13 @@
 
 
                 <div class="row w-100 justify-content-center d-flex">
-                    <p class="text-center">Концентрация гумусовых веществ: <span>{{vegetation.concentration_of_humic_substances}}</span>
+                    <p class="text-center">Концентрация гумусовых веществ: <span>{{vegetation.concentration_of_humic_substances.toFixed(2)}}</span>
                         %
                     </p>
                 </div>
                 <div class="row w-100 d-flex justify-content-center">
-                    <p class="volume">Необходимый объём «ЭКО-СП»: <span>{{vegetation.required_volume}}</span> л
+                    <p class="volume">Необходимый объём «ЭКО-СП»: <span>{{vegetation.required_volume.toFixed(2)}}</span>
+                        л
                     </p>
                 </div>
 
@@ -187,9 +190,9 @@
                 л</h3>
         </div>
 
-        <div class="row d-flex justify-content-center mt-2 w-100">
+        <div class="row d-flex justify-content-center mt-2 w-100 mb-5">
             <div class="col-md-8">
-                <button type="submit" class="btn btn-primary w-100 p-3"
+                <button type="submit" class="btn btn-primary w-100 p-3" v-if="is_show"
                 >ШАГ 2: Расчет стоимости препарата «ЭКО-СП»
                 </button>
             </div>
@@ -225,6 +228,7 @@
         data() {
             return {
 
+                is_show: true,
                 rate: [
                     {from: 0, to: 90, val: 0.6},
                     {from: 91, to: 105, val: 0.7},
@@ -261,8 +265,14 @@
         },
         mounted() {
             this.addVegetation()
-        },
 
+            this.form.prepare.seeding_rate = this.seedingRate
+        },
+        computed: {
+            seedingRate: function () {
+                return this.$store.getters.GetSeedingRate
+            }
+        },
         watch: {
 
             'form.crop_area': function (newVal) {
@@ -270,6 +280,8 @@
             },
             'form.prepare.seeding_rate': function (newVal) {
                 this.calc()
+                this.$store.dispatch("setSeedingRate", newVal)
+
             }
         },
         methods: {
@@ -295,6 +307,8 @@
                         if (sub.from <= item.seeding_rate && item.seeding_rate <= sub.to) {
                             this.form.vegetation[vegIndex].application_rate_selected = parseInt(index)
                             this.form.vegetation[vegIndex].required_volume = item.seeding_rate * this.application_rate_of_the_drug_vegetation[parseInt(index)]
+                            this.form.vegetation[vegIndex].concentration_of_humic_substances = this.application_rate_of_the_drug_vegetation[parseInt(index)]*0.015 / this.form.vegetation[vegIndex].required_volume * 100;
+
                             rateFound = true;
 
                             break;
@@ -302,7 +316,7 @@
                     }
 
                     if (!rateFound)
-                        this.form.vegetation[vegIndex].application_rate_selected = this.rate.length-1
+                        this.form.vegetation[vegIndex].application_rate_selected = this.rate.length - 1
 
                 })
 
@@ -318,6 +332,7 @@
 
             submit() {
                 this.$store.dispatch('setStepOne', this.form)
+                this.is_show = false;
                 this.$emit("next-step")
             },
             prepareTextNumber(number) {

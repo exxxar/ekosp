@@ -3,10 +3,13 @@ const state = {
     step_one: null,
     step_two: null,
     step_three: null,
-    base_price: 99,
+    base_price: null,
     final_base_price: 0,
     current_volume: 20000,
+    crop_area: null,
+    seeding_rate: null,
     final_full_price: 0,
+    vegetation_count: 1,
 
     pay_method: 0,
 
@@ -54,6 +57,15 @@ const getters = {
     },
     Zero: (state, getters, rootState) => {
         return state.step_zero;
+    },
+    GetSeedingRate: (state, getters, rootState)=>{
+        return state.seeding_rate
+    },
+    GetVegetationCount: (state, getters, rootState)=>{
+        return state.vegetation_count
+    },
+    GetCropArea: (state, getters, rootState)=>{
+        return state.crop_area
     },
     GetSummaryDiscount: (state, getters, rootState)=>{
       return state.summary_discount
@@ -125,10 +137,10 @@ const getters = {
             (state.base_price * pay_method_discount)
         )
 
-        state.summary_discount = Math.round((volume_discount+season_discount+discount_for_AKKOR_members+pay_method_discount) * 100)
+        state.summary_discount = ((volume_discount+season_discount+discount_for_AKKOR_members+pay_method_discount) * 100).toFixed(2);
 
 
-        return Math.round(state.final_base_price)
+        return state.final_base_price.toFixed(2);
     }
 
 }
@@ -156,6 +168,12 @@ const actions = {
     },
     setSeasonDiscount({state, commit}, data) {
         state.season_discount = data
+    },
+    setBasePrice({state, commit}, data) {
+        state.base_price = data
+    },
+    setSeedingRate({state, commit}, data) {
+        state.seeding_rate = data
     }
 
 }
@@ -168,6 +186,9 @@ const mutations = {
     setStepOne(state, payload) {
         state.step_one = payload;
         state.current_volume =payload.summary_required_volume
+        state.crop_area = payload.crop_area
+        state.vegetation_count = payload.vegetation.length;
+
     },
     setStepTwo(state, payload) {
         state.step_two = payload;

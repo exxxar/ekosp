@@ -64,32 +64,30 @@
         <div class="container itog">
             <div class="row">
                 <div class="col-md-5">Предпосевная обработка семян:</div>
-                <div class="col-md-3"><span>100</span> л</div>
-                <div class="col-md-3"><span>8700</span> руб</div>
+                <div class="col-md-3"><span>{{one.prepare.required_volume}}</span> л</div>
+                <div class="col-md-3"><span>{{one.prepare.required_volume*basePrice}}</span> руб</div>
             </div>
-            <div class="row">
-                <div class="col-md-5">Первая обработка по вегетации:</div>
-                <div class="col-md-3"><span>100</span> л</div>
-                <div class="col-md-3"><span>8700</span> руб</div>
+
+            <div class="row" v-for="(vegetation, index) in one.vegetation">
+                <div class="col-md-5">{{prepareTextNumber(index)}} обработка по вегетации:</div>
+                <div class="col-md-3"><span>{{vegetation.required_volume}}</span> л</div>
+                <div class="col-md-3"><span>{{vegetation.required_volume*basePrice}}</span> руб</div>
             </div>
-            <div class="row">
-                <div class="col-md-5">Вторая обработка по вегетации:</div>
-                <div class="col-md-3"><span>100</span> л</div>
-                <div class="col-md-3"><span>8700</span> руб</div>
-            </div>
+
 
             <hr class="w-100"/>
 
             <div class="row itogblue">
                 <div class="col-md-5">Итоговые инвестиции хозяйства:</div>
-                <div class="col-md-3"><span>300</span> л</div>
-                <div class="col-md-3"><span>26 100</span> руб</div>
+                <div class="col-md-3"><span>{{currentVolume}}</span> л</div>
+                <div class="col-md-3"><span>{{currentVolume*basePrice}}</span> руб</div>
             </div>
             <div class="row itogblue">
                 <div class="col-md-5">Прирост урожайности:</div>
-                <div class="col-md-3"><span> 8 </span> %</div>
-                <div class="col-md-3"><span >3.0</span> ц/га</div>
-                <div class="col-md-1 col-sm-12 d-flex justify-content-center align-items-center " v-b-modal.modal-4><a href="#calc-about">
+                <div class="col-md-3"><span>{{vegetation[vegetationCount]}}</span> %</div>
+                <div class="col-md-3"><span>{{getIncreaseCentners()}}</span> ц/га</div>
+                <div class="col-md-1 col-sm-12 d-flex justify-content-center align-items-center " v-b-modal.modal-4><a
+                    href="#calc-about">
                     <div class="calc-about">?</div>
                 </a></div>
             </div>
@@ -97,27 +95,32 @@
 
         <div class="row d-flex align-items-center flex-column w-100 mt-5 rez-panel">
             <div class="col-md-6 col-sm-12">
-                <h5>Прибавка в деньгах<strong class="text-danger">*</strong>: <span>60 000</span> руб</h5>
+                <h5>Прибавка в деньгах<strong class="text-danger">*</strong>: <span>{{getIncreaseMoney()}}</span> руб
+                </h5>
             </div>
 
             <div class="col-md-6 col-sm-12">
-                <p>Дополнительная выручка от продажи дополнительного объема урожая полученного  от увеличения урожайности.</p>
+                <p>Дополнительная выручка от продажи дополнительного объема урожая полученного от увеличения
+                    урожайности.</p>
             </div>
         </div>
 
         <div class="row d-flex align-items-center w-100 flex-column rez-panel">
             <div class="col-md-6 col-sm-12">
-                <h5 class="w-100">Чистая прибыл <strong class="text-danger">*</strong>: <span>38 400</span> руб</h5>
+                <h5 class="w-100">Чистая прибыл <strong class="text-danger">*</strong>: <span>{{getNetProfit()}}</span>
+                    руб</h5>
             </div>
 
             <div class="col-md-6 col-sm-12">
-                <p>Расчетная «чистая прибыль» от использования ЭКО-СП:  дополнительная выручка минус расходы на покупку и использование «ЭКО-СП» совместно с СЗР.</p>
+                <p>Расчетная «чистая прибыль» от использования ЭКО-СП: дополнительная выручка минус расходы на покупку и
+                    использование «ЭКО-СП» совместно с СЗР.</p>
             </div>
         </div>
 
         <div class="row d-flex align-items-center w-100 flex-column w-100 rez-panel">
             <div class="col-md-6 col-sm-12">
-                <h5>Рентабельность гектара <strong class="text-danger">*</strong>: <span>768</span> руб</h5>
+                <h5>Рентабельность гектара <strong class="text-danger">*</strong>: <span>{{getProfitability()}}</span>
+                    руб</h5>
             </div>
 
             <div class="col-md-6 col-sm-12">
@@ -129,7 +132,7 @@
         <div class="dis-line"></div>
 
 
-        <div class="row d-flex justify-content-center w-100 flex-wrap">
+        <div class="row d-flex justify-content-center w-100 flex-wrap mb-5">
             <div class="col-md-8 col-sm-12 mt-2">
                 <button type="submit" class="btn btn-success w-100">Сохранить файл и выслать на почту</button>
             </div>
@@ -155,12 +158,13 @@
 </template>
 <script>
 
-    import  {jsPDF}  from "jspdf";
-    import  html2canvas  from "html2canvas";
+    import {jsPDF} from "jspdf";
+    import html2canvas from "html2canvas";
 
     export default {
         data() {
             return {
+                vegetation: [5, 8, 11],
                 form: {
                     crop_area: '',
                     seeding_rate: '',
@@ -169,30 +173,71 @@
                 }
             }
         },
-
+        computed: {
+            one: function () {
+                return this.$store.getters.One
+            },
+            cropArea: function () {
+                return this.$store.getters.GetCropArea
+            },
+            seedingRate: function () {
+                return this.$store.getters.GetSeedingRate
+            },
+            basePrice: function () {
+                return this.$store.getters.GetBasePrice
+            },
+            currentVolume: function () {
+                return this.$store.getters.GetCurrentVolume
+            },
+            vegetationCount: function () {
+                return this.$store.getters.GetVegetationCount
+            }
+        },
+        mounted() {
+            this.form.crop_area = this.cropArea
+            this.form.seeding_rate = this.seedingRate
+        },
         methods: {
-            submit(){
-               /* const doc = new jsPDF();
+            prepareTextNumber(number) {
+                let arr = ["Первая", "Вторая", "Третья"];
+                return arr[number > 0 && number < arr.length ? number : 0]
+            },
+            getIncreaseCentners() {
+
+                return (this.form.planned_yield / 100 * this.vegetation[this.vegetationCount]).toFixed(2)
+            },
+            getIncreaseMoney() {
+
+                return ((this.form.crop_area * this.getIncreaseCentners() * this.form.yield_cost) / 10).toFixed(2)
+            },
+            getNetProfit() {
+                return (this.getIncreaseMoney() * (this.basePrice * this.currentVolume)).toFixed(2)
+            },
+            getProfitability() {
+                return (this.getNetProfit() / this.form.crop_area).toFixed(2)
+            },
+            submit() {
+                /* const doc = new jsPDF();
 
 
-                doc.addImage("https://sun2.48276.userapi.com/c858532/v858532227/1fc927/po1NkhQIvp4.jpg", 'PNG', 0, 0, 211, 298);
-                doc.text("Hello world!", 10, 10);
+                 doc.addImage("https://sun2.48276.userapi.com/c858532/v858532227/1fc927/po1NkhQIvp4.jpg", 'PNG', 0, 0, 211, 298);
+                 doc.text("Hello world!", 10, 10);
 
-                doc.save("a4.pdf");*/
+                 doc.save("a4.pdf");*/
 
-              /*  const doc = new jsPDF()
+                /*  const doc = new jsPDF()
 
-                doc.text("Hello world!", 10, 10);*/
+                  doc.text("Hello world!", 10, 10);*/
 
-               /* doc.autoTable({
-                    head: [['Name', 'Email', 'Country']],
-                    body: [
-                        ['David', 'david@example.com', 'Sweden'],
-                        ['Castille', 'castille@example.com', 'Spain'],
-                        // ...
-                    ],
-                })
-*/
+                /* doc.autoTable({
+                     head: [['Name', 'Email', 'Country']],
+                     body: [
+                         ['David', 'david@example.com', 'Sweden'],
+                         ['Castille', 'castille@example.com', 'Spain'],
+                         // ...
+                     ],
+                 })
+ */
 
                 html2canvas(document.querySelector("#step-3")).then(canvas => {
                     //document.body.appendChild(canvas)
@@ -207,15 +252,15 @@
 
                 });
 
-               /* html2canvas($("#canvas"), {
-                    onrendered: function(canvas) {
-                        var imgData = canvas.toDataURL(
-                            'image/png');
-                        var doc = new jsPDF('p', 'mm');
-                        doc.addImage(imgData, 'PNG', 10, 10);
-                        doc.save('sample-file.pdf');
-                    }
-                });*/
+                /* html2canvas($("#canvas"), {
+                     onrendered: function(canvas) {
+                         var imgData = canvas.toDataURL(
+                             'image/png');
+                         var doc = new jsPDF('p', 'mm');
+                         doc.addImage(imgData, 'PNG', 10, 10);
+                         doc.save('sample-file.pdf');
+                     }
+                 });*/
 
             }
         }
@@ -252,14 +297,16 @@
             outline: none;
         }
     }
+
     .itog {
         padding: 20px;
         font-weight: 600;
         line-height: 200%;
         border-radius: 5px;
         border: 1px lightgray solid;
+
         .itogblue {
-            color:deepskyblue;
+            color: deepskyblue;
         }
     }
 </style>
