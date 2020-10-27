@@ -166,10 +166,10 @@
             return {
                 vegetation: [5, 8, 11],
                 form: {
-                    crop_area: '',
-                    seeding_rate: '',
-                    planned_yield: '',
-                    yield_cost: ''
+                    crop_area: null,
+                    seeding_rate: null,
+                    planned_yield: null,
+                    yield_cost: null
                 }
             }
         },
@@ -203,10 +203,14 @@
                 return arr[number > 0 && number < arr.length ? number : 0]
             },
             getIncreaseCentners() {
+                if (this.form.planned_yield==null)
+                    return 0;
 
                 return (this.form.planned_yield / 100 * this.vegetation[this.vegetationCount]).toFixed(2)
             },
             getIncreaseMoney() {
+                if (this.form.crop_area==null)
+                    return 0;
 
                 return ((this.form.crop_area * this.getIncreaseCentners() * this.form.yield_cost) / 10).toFixed(2)
             },
@@ -214,6 +218,8 @@
                 return (this.getIncreaseMoney() * (this.basePrice * this.currentVolume)).toFixed(2)
             },
             getProfitability() {
+                if (this.form.crop_area==null)
+                    return 0;
                 return (this.getNetProfit() / this.form.crop_area).toFixed(2)
             },
             submit() {
