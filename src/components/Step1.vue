@@ -186,7 +186,7 @@
 
 
         <div class="row d-flex justify-content-center mt-2 part">
-            <h3 class="col-md-12 col-sm-12 upper part m-0">Ваш общий необходимый объем<span>{{this.form.summary_required_volume}}</span>
+            <h3 class="col-md-12 col-sm-12 upper part m-0">Ваш общий необходимый объем<span>{{this.form.summary_required_volume.toFixed(2)}}</span>
                 л</h3>
         </div>
 
@@ -255,7 +255,7 @@
                         seeding_rate: null,
                         consumption_rate_selected: 2,
                         application_rate_selected: 2,
-                        required_volume: 100,
+                        required_volume: 0,
                     },
 
                     vegetation: [],
@@ -321,6 +321,7 @@
                 })
 
 
+                this.calc()
             },
             checkConsumptionRate(index) {
 
@@ -346,7 +347,7 @@
                         seeding_rate: null,
                         application_rate_selected: 0,
                         concentration_of_humic_substances: 0.01,
-                        required_volume: 200,
+                        required_volume: 0,
                     })
 
                     this.calc()

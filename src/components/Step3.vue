@@ -65,13 +65,13 @@
             <div class="row">
                 <div class="col-md-5">Предпосевная обработка семян:</div>
                 <div class="col-md-3"><span>{{one.prepare.required_volume}}</span> л</div>
-                <div class="col-md-3"><span>{{one.prepare.required_volume*basePrice}}</span> руб</div>
+                <div class="col-md-3"><span>{{(one.prepare.required_volume*basePrice).toFixed(2)}}</span> руб</div>
             </div>
 
             <div class="row" v-for="(vegetation, index) in one.vegetation">
                 <div class="col-md-5">{{prepareTextNumber(index)}} обработка по вегетации:</div>
                 <div class="col-md-3"><span>{{vegetation.required_volume}}</span> л</div>
-                <div class="col-md-3"><span>{{vegetation.required_volume*basePrice}}</span> руб</div>
+                <div class="col-md-3"><span>{{(vegetation.required_volume*basePrice).toFixed(2)}}</span> руб</div>
             </div>
 
 
@@ -80,7 +80,7 @@
             <div class="row itogblue">
                 <div class="col-md-5">Итоговые инвестиции хозяйства:</div>
                 <div class="col-md-3"><span>{{currentVolume}}</span> л</div>
-                <div class="col-md-3"><span>{{currentVolume*basePrice}}</span> руб</div>
+                <div class="col-md-3"><span>{{(currentVolume*basePrice).toFixed(2)}}</span> руб</div>
             </div>
             <div class="row itogblue">
                 <div class="col-md-5">Прирост урожайности:</div>
