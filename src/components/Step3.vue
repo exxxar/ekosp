@@ -1,5 +1,5 @@
 <template>
-    <form v-on:submit.prevent="submit" class="flex-wrap d-flex justify-content-center" id="step-3">
+    <form v-on:submit.prevent="submit" class="flex-wrap d-flex justify-content-center" id="step3">
 
         <h2>ШАГ 3: Расчет экономической эффективности применения препарата «ЭКО-СП»</h2>
 
@@ -11,7 +11,7 @@
                            v-model="form.crop_area"
                            type="number"
                            min="0"
-                           class="form-control input-lg"
+                           class="form-control form-control-lg"
                            placeholder="Площадь посевов">
                     <div class="input-group-append">
                         <span class="input-group-text">га</span>
@@ -24,7 +24,7 @@
                            v-model="form.seeding_rate"
                            type="number"
                            min="0"
-                           class="form-control input-lg"
+                           class="form-control form-control-lg"
                            placeholder="Норма высева">
                     <div class="input-group-append">
                         <span class="input-group-text">кг/га</span>
@@ -37,7 +37,7 @@
                            v-model="form.planned_yield"
                            type="number"
                            min="0"
-                           class="form-control input-lg"
+                           class="form-control form-control-lg"
                            placeholder="Планируемая урожайность">
                     <div class="input-group-append">
                         <span class="input-group-text">ц/га</span>
@@ -51,7 +51,7 @@
                            v-model="form.yield_cost"
                            type="number"
                            min="0"
-                           class="form-control input-lg"
+                           class="form-control form-control-lg"
                            placeholder="Стоимость урожая">
                     <div class="input-group-append">
                         <span class="input-group-text">руб/т</span>
@@ -70,7 +70,7 @@
 
             <div class="row" v-for="(vegetation, index) in one.vegetation">
                 <div class="col-md-5">{{prepareTextNumber(index)}} обработка по вегетации:</div>
-                <div class="col-md-3"><span>{{vegetation.required_volume}}</span> л</div>
+                <div class="col-md-3"><span>{{vegetation.required_volume.toFixed(2)}}</span> л</div>
                 <div class="col-md-3"><span>{{(vegetation.required_volume*basePrice).toFixed(2)}}</span> руб</div>
             </div>
 
@@ -84,7 +84,7 @@
             </div>
             <div class="row itogblue">
                 <div class="col-md-5">Прирост урожайности:</div>
-                <div class="col-md-3"><span>{{vegetation[vegetationCount]}}</span> %</div>
+                <div class="col-md-3"><span>{{getIncraceRate()}}</span> %</div>
                 <div class="col-md-3"><span>{{getIncreaseCentners()}}</span> ц/га</div>
                 <div class="col-md-1 col-sm-12 d-flex justify-content-center align-items-center " v-b-modal.modal-4><a
                     href="#calc-about">
@@ -94,36 +94,36 @@
         </div>
 
         <div class="row d-flex align-items-center flex-column w-100 mt-5 rez-panel">
-            <div class="col-md-6 col-sm-12">
+            <div class="col-lg-8 col-md-12 col-sm-12">
                 <h5>Прибавка в деньгах<strong class="text-danger">*</strong>: <span>{{getIncreaseMoney()}}</span> руб
                 </h5>
             </div>
 
-            <div class="col-md-6 col-sm-12">
+            <div class="col-lg-8 col-md-12 col-sm-12">
                 <p>Дополнительная выручка от продажи дополнительного объема урожая полученного от увеличения
                     урожайности.</p>
             </div>
         </div>
 
         <div class="row d-flex align-items-center w-100 flex-column rez-panel">
-            <div class="col-md-6 col-sm-12">
-                <h5 class="w-100">Чистая прибыл <strong class="text-danger">*</strong>: <span>{{getNetProfit()}}</span>
+            <div class="col-lg-8 col-md-12 col-sm-12">
+                <h5 class="w-100">Чистая прибыль <strong class="text-danger">*</strong>: <span>{{getNetProfit()}}</span>
                     руб</h5>
             </div>
 
-            <div class="col-md-6 col-sm-12">
+            <div class="col-lg-8 col-md-12 col-sm-12">
                 <p>Расчетная «чистая прибыль» от использования ЭКО-СП: дополнительная выручка минус расходы на покупку и
                     использование «ЭКО-СП» совместно с СЗР.</p>
             </div>
         </div>
 
         <div class="row d-flex align-items-center w-100 flex-column w-100 rez-panel">
-            <div class="col-md-6 col-sm-12">
+            <div class="col-lg-8 col-md-12 col-sm-12">
                 <h5>Рентабельность гектара <strong class="text-danger">*</strong>: <span>{{getProfitability()}}</span>
                     руб</h5>
             </div>
 
-            <div class="col-md-6 col-sm-12">
+            <div class="col-lg-8 col-md-12 col-sm-12">
                 <p>Экономическая эффективность использования ЭКО-СП на 1 га</p>
             </div>
         </div>
@@ -133,11 +133,12 @@
 
 
         <div class="row d-flex justify-content-center w-100 flex-wrap mb-5">
-            <div class="col-md-8 col-sm-12 mt-2">
-                <button type="submit" class="btn btn-success w-100">Сохранить файл и выслать на почту</button>
+            <div class="col-lg-8 col-md-12 col-sm-12 mt-2">
+                <button type="submit" class="btn success-custom w-100">Сохранить файл и выслать на почту</button>
             </div>
-            <div class="col-md-8 col-sm-12 mt-2">
-                <button type="button" class="btn btn-primary w-100">Сгенерировать официальное коммерческое предложение и
+            <div class="col-lg-8 col-md-12 col-sm-12 mt-2">
+                <button type="submit" class="btn btn-primary primary-custom w-100">Сгенерировать официальное
+                    коммерческое предложение и
                     выслать на
                     почту
                 </button>
@@ -158,13 +159,11 @@
 </template>
 <script>
 
-    import {jsPDF} from "jspdf";
-    import html2canvas from "html2canvas";
-
     export default {
         data() {
             return {
-                vegetation: [0, 5, 8, 11],
+                vegetation: [0, 7, 11, 12.4],
+
                 form: {
                     crop_area: null,
                     seeding_rate: null,
@@ -173,7 +172,19 @@
                 }
             }
         },
+        watch: {
+
+            'form.seeding_rate': function (newVal) {
+                this.$store.dispatch("setSeedingRate", newVal)
+            }
+        },
         computed: {
+            zero: function () {
+                return this.$store.getters.Zero
+            },
+            two: function () {
+                return this.$store.getters.Two
+            },
             one: function () {
                 return this.$store.getters.One
             },
@@ -202,11 +213,18 @@
                 let arr = ["Первая", "Вторая", "Третья"];
                 return arr[number > 0 && number < arr.length ? number : 0]
             },
+            getIncraceRate() {
+                let preparation = this.one.need_seed_preparation ? 1.9 : 0;
+                return this.vegetation[this.vegetationCount] + preparation
+            },
             getIncreaseCentners() {
                 if (this.form.planned_yield == null)
                     return 0;
 
-                return (this.form.planned_yield / 100 * this.vegetation[this.vegetationCount]).toFixed(2)
+                let preparation = this.one.need_seed_preparation ? 1.9 : 0;
+
+
+                return (this.form.planned_yield / 100 * (this.vegetation[this.vegetationCount] + preparation)).toFixed(2)
             },
             getIncreaseMoney() {
                 if (this.form.crop_area == null)
@@ -215,69 +233,43 @@
                 return ((this.form.crop_area * this.getIncreaseCentners() * this.form.yield_cost) / 10).toFixed(2)
             },
             getNetProfit() {
-                return (this.getIncreaseMoney() * (this.basePrice * this.currentVolume)).toFixed(2)
+                // return (this.getIncreaseMoney() * (this.basePrice * this.currentVolume)).toFixed(2)
+                return (Math.abs((this.basePrice * this.currentVolume) - this.getIncreaseMoney())).toFixed(2)
             },
             getProfitability() {
                 if (this.form.crop_area == null)
                     return 0;
-                return (this.getNetProfit() / this.form.crop_area).toFixed(2)
+                return Math.abs((this.getNetProfit() / this.form.crop_area)).toFixed(2)
             },
             submit() {
-                /* const doc = new jsPDF();
-
-
-                 doc.addImage("https://sun2.48276.userapi.com/c858532/v858532227/1fc927/po1NkhQIvp4.jpg", 'PNG', 0, 0, 211, 298);
-                 doc.text("Hello world!", 10, 10);
-
-                 doc.save("a4.pdf");*/
-
-                /*  const doc = new jsPDF()
-
-                  doc.text("Hello world!", 10, 10);*/
-
-                /* doc.autoTable({
-                     head: [['Name', 'Email', 'Country']],
-                     body: [
-                         ['David', 'david@example.com', 'Sweden'],
-                         ['Castille', 'castille@example.com', 'Spain'],
-                         // ...
-                     ],
-                 })
- */
-
-                html2canvas(document.querySelector("#step-3")).then(canvas => {
-                    //document.body.appendChild(canvas)
-
-                    const doc = new jsPDF();
-
-
-                    doc.addImage(canvas, 'PNG', 0, 0, 100, 100);
-                    doc.text("Hello world!", 10, 10);
-
-                    doc.save("a4.pdf");
-
+                this.$store.dispatch("submitResult")
+                this.notify("Заявка успешно отправлена! Спасибо что выбрали нас!")
+            },
+            notify(text) {
+                this.$notify({
+                    group: 'foo',
+                    title: 'ЭКО-СП',
+                    type: 'success',
+                    text: text
                 });
-
-                /* html2canvas($("#canvas"), {
-                     onrendered: function(canvas) {
-                         var imgData = canvas.toDataURL(
-                             'image/png');
-                         var doc = new jsPDF('p', 'mm');
-                         doc.addImage(imgData, 'PNG', 10, 10);
-                         doc.save('sample-file.pdf');
-                     }
-                 });*/
-
             }
         }
     }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+
+    .input-group-text {
+        padding: 0 15px 0 15px;
+        min-width: 80px;
+        display: flex;
+        justify-content: center;
+    }
+
     .rez-panel {
 
         h5 {
-            padding: 20px;
+            padding: 10px;
             background: #eee;
             border: 1px lightgray solid;
 

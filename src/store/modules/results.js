@@ -9,24 +9,28 @@ const state = {
     crop_area: null,
     seeding_rate: null,
     final_full_price: 0,
-    vegetation_count: 1,
 
     pay_method: 0,
-
     season_discount: 0,
+
+    volume_discount_result: 0,
+    pay_method_result: 0,
+    pay_method_result_text: '',
+    season_discount_result: 0,
+    akkor_member_discount_result: 0,
 
     summary_discount: 0,
 
     pay_method_discount_list: [
-        {discount: 3, method: "100%", id: 0},
-        {discount: 2, method: "75% / 25%", id: 1},
-        {discount: 0, method: "Other", id: 2}
+        {discount: 3, method: "100% предоплата", id: 0},
+        {discount: 2, method: "75% / 25% предоплата", id: 1},
+        {discount: 0, method: "Другое", id: 2}
     ],
     season_discount_list: [
-        {discount: 5, month_from: 11, month_to: 12,id:1},
-        {discount: 3, month_from: 12, month_to: 1,id:2},
-        {discount: 2, month_from: 1, month_to: 3,id:3},
-        {discount: 0, month_from: 3, month_to: 11,id:0},
+        {discount: 5, month_from: 11, month_to: 12, id: 1},
+        {discount: 3, month_from: 12, month_to: 1, id: 2},
+        {discount: 2, month_from: 1, month_to: 3, id: 3},
+        {discount: 0, month_from: 3, month_to: 11, id: 0},
     ],
     volume_discount_list: [
         {discount: 0, from_vol: 0, to_vol: 200},
@@ -58,26 +62,27 @@ const getters = {
     Zero: (state, getters, rootState) => {
         return state.step_zero;
     },
-    GetSeedingRate: (state, getters, rootState)=>{
+    GetSeedingRate: (state, getters, rootState) => {
         return state.seeding_rate
     },
-    GetVegetationCount: (state, getters, rootState)=>{
-        return state.vegetation_count
+    GetVegetationCount: (state, getters, rootState) => {
+        console.log(state.step_one.vegetation.length)
+        return state.step_one.vegetation.length
     },
-    GetCropArea: (state, getters, rootState)=>{
+    GetCropArea: (state, getters, rootState) => {
         return state.crop_area
     },
-    GetSummaryDiscount: (state, getters, rootState)=>{
-      return state.summary_discount
+    GetSummaryDiscount: (state, getters, rootState) => {
+        return state.summary_discount
     },
-    GetPayMethodDiscountList: (state, getters, rootState)=>{
+    GetPayMethodDiscountList: (state, getters, rootState) => {
         return state.pay_method_discount_list
     },
-    GetVolumeDiscountList:(state,getters,rootState)=>{
-      return state.volume_discount_list
+    GetVolumeDiscountList: (state, getters, rootState) => {
+        return state.volume_discount_list
     },
-    GetSeasonDiscountList: (state, getters, rootState)=>{
-      return state.season_discount_list
+    GetSeasonDiscountList: (state, getters, rootState) => {
+        return state.season_discount_list
     },
     GetCurrentVolume: (state, getters, rootState) => {
         return state.current_volume
@@ -88,7 +93,7 @@ const getters = {
 
         let volume_discount = 0;
 
-        for(let index in state.volume_discount_list) {
+        for (let index in state.volume_discount_list) {
             let item = state.volume_discount_list[index];
             let res = (item.to_vol != null ?
                 item.from_vol <= state.current_volume && item.to_vol >= state.current_volume :
@@ -98,18 +103,20 @@ const getters = {
                 volume_discount = item.discount / 100
         }
 
-      /*  const d = new Date();
-        let season_discount = 0;
-        for(let index in state.season_discount_list) {
-            let item = state.season_discount_list[index];
-            let res = (item.month_from >= d.getMonth() && item.month_from <= d.getMonth())
+        state.volume_discount_result = volume_discount
 
-            if (res)
-                season_discount = item.discount / 100
-        }*/
+        /*  const d = new Date();
+          let season_discount = 0;
+          for(let index in state.season_discount_list) {
+              let item = state.season_discount_list[index];
+              let res = (item.month_from >= d.getMonth() && item.month_from <= d.getMonth())
+
+              if (res)
+                  season_discount = item.discount / 100
+          }*/
 
         let season_discount = 0;
-        for(let index in state.season_discount_list) {
+        for (let index in state.season_discount_list) {
             let item = state.season_discount_list[index];
             let res = (item.id === state.season_discount)
 
@@ -117,17 +124,24 @@ const getters = {
                 season_discount = item.discount / 100
         }
 
+        state.season_discount_result = season_discount
+
         let discount_for_AKKOR_members = (state.is_discount_for_AKKOR_members ? 10 : 0) / 100
+
+        state.akkor_member_discount_result = discount_for_AKKOR_members;
 
         let pay_method_discount = 0;
 
-        for(let index in state.pay_method_discount_list) {
+        for (let index in state.pay_method_discount_list) {
             let item = state.pay_method_discount_list[index];
             let res = (item.id === state.pay_method)
 
-            if (res)
+            if (res) {
                 pay_method_discount = item.discount / 100
+                state.pay_method_result_text = item.method
+            }
         }
+        state.pay_method_result = pay_method_discount
 
 
         state.final_base_price -= (
@@ -137,7 +151,7 @@ const getters = {
             (state.base_price * pay_method_discount)
         )
 
-        state.summary_discount = ((volume_discount+season_discount+discount_for_AKKOR_members+pay_method_discount) * 100).toFixed(2);
+        state.summary_discount = ((volume_discount + season_discount + discount_for_AKKOR_members + pay_method_discount) * 100).toFixed(2);
 
 
         return state.final_base_price.toFixed(2);
@@ -173,21 +187,61 @@ const actions = {
         state.base_price = data
     },
     setSeedingRate({state, commit}, data) {
-        state.seeding_rate = data
-    }
+        commit('setSeedingRate', data)
+    },
+    submitResult({state, commit}) {
+        commit('submitResult')
+    },
 
 }
 
 // mutations
 const mutations = {
+    submitResult(state, payload) {
+
+        axios
+            .post('mail.php', {
+                name: state.step_zero.name,
+                phone: state.step_zero.phone,
+                email: state.step_zero.email,
+                invite: state.step_zero.invite,
+                company: state.step_zero.company,
+                volume: state.currentVolume,
+                volume_discount: state.volume_discount_result * 100,
+                season_discount: state.season_discount_result * 100,
+                akkor_member_discount: state.akkor_member_discount_result *100,
+                pay_method_discount: state.pay_method_result * 100,
+                pay_method: state.pay_method_result_text,
+                summary_discount: state.summary_discount,
+                discount_in_money: state.base_price - state.final_base_price, //скидка в рублях
+                base_price_with_discount: state.final_base_price,
+                full_price: state.final_base_price * state.current_volume,
+
+
+            }).then(resp => {
+
+
+            console.log(resp)
+            window.open(resp.data.filename, "_blank");
+        });
+    },
+    setSeedingRate(state, payload) {
+        state.seeding_rate = payload
+
+        if (state.step_one != null)
+            state.step_one.prepare.seeding_rate = payload
+    },
     setStepZero(state, payload) {
         state.step_zero = payload;
     },
     setStepOne(state, payload) {
         state.step_one = payload;
-        state.current_volume =payload.summary_required_volume
+        state.current_volume = payload.summary_required_volume
         state.crop_area = payload.crop_area
-        state.vegetation_count = payload.vegetation.length;
+
+
+
+
 
     },
     setStepTwo(state, payload) {

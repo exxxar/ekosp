@@ -1,5 +1,5 @@
 <template>
-    <form v-on:submit.prevent="submit" class="flex-wrap d-flex justify-content-center mb-5">
+    <form v-on:submit.prevent="submit" class="flex-wrap d-flex justify-content-center mb-5" id="step2">
 
         <h2 class="w-100">ШАГ 2: Расчет стоимости препарата «ЭКО-СП»</h2>
 
@@ -8,8 +8,10 @@
             <div class="col-md-5">
                 <div class="input-group mb-3">
                     <input name="humiccost"
+                           type="text"
+                           maxlength="10"
                            v-model="humic_price"
-                           class="form-control input-lg">
+                           class="form-control form-control-lg">
                     <div class="input-group-append">
                         <span class="input-group-text">руб/л</span>
                     </div>
@@ -17,7 +19,8 @@
 
             </div>
             <div class="col-md-7" style="margin-top:10px;text-align:left;">
-                Базовая расчётная цена на <strong><span id="current_date_time_block">19.10.2020</span></strong>
+                Базовая расчётная цена на <strong><span
+                id="current_date_time_block">{{getCurrentDate()}}</span></strong>
             </div>
         </div>
 
@@ -40,11 +43,12 @@
                     </li>
                 </ul>
             </div>
-            <div class="col-md-6 d-flex justify-content-start flex-wrap align-items-end">
+            <div class="col-md-6 d-flex justify-content-start flex-wrap align-items-end mt-2">
 
-                <div class="volume text-left">
+                <div class="volume text-left ">
                     <p>Цена за литр продукции:<br><span>{{basePrice}}</span> руб</p>
-                    <p>Стоимость объёма продукции с учетом скидки:<br><span>{{(basePrice*currentVolume).toFixed(2)}}</span> руб</p>
+                    <p>Стоимость объёма продукции с учетом
+                        скидки:<br><span>{{(basePrice*currentVolume).toFixed(2)}}</span> руб</p>
                 </div>
 
 
@@ -56,11 +60,11 @@
 
 
         <div class="row w-100">
-            <div class="col-md-6 discountblock">
+            <div class="col-lg-6 col-md-12 discountblock">
                 <div class="row dis-seasons p-2 text-white">
-                    <div class="col-4 p-1"><span class="bg-success d-flex justify-content-center">5%</span></div>
-                    <div class="col-4 p-1"><span class="bg-success d-flex justify-content-center">3%</span></div>
-                    <div class="col-4 p-1"><span class="bg-success d-flex justify-content-center">2%</span></div>
+                    <div class="col-4 p-1"><span class="bg-success-custom d-flex justify-content-center">5%</span></div>
+                    <div class="col-4 p-1"><span class="bg-success-custom d-flex justify-content-center">3%</span></div>
+                    <div class="col-4 p-1"><span class="bg-success-custom d-flex justify-content-center">2%</span></div>
                 </div>
 
                 <div class="row dis-seasons2">
@@ -95,11 +99,12 @@
                 </div>
 
             </div>
-            <div class="col-md-6 d-flex justify-content-start flex-wrap align-items-end">
+            <div class="col-lg-6 col-md-12 d-flex justify-content-start flex-wrap align-items-end mt-2">
 
                 <div class="volume text-left">
                     <p>Цена за литр продукции:<br><span>{{basePrice}}</span> руб</p>
-                    <p>Стоимость объёма продукции с учетом скидки:<br><span>{{(basePrice*currentVolume).toFixed(2)}}</span> руб</p>
+                    <p>Стоимость объёма продукции с учетом
+                        скидки:<br><span>{{(basePrice*currentVolume).toFixed(2)}}</span> руб</p>
                 </div>
 
 
@@ -112,7 +117,8 @@
 
 
         <div class="row w-100">
-            <div class="col-md-6 discountblock d-flex justify-content-center align-items-center" style="height: 80px">
+            <div class="col-lg-6 col-md-12 discountblock d-flex justify-content-center align-items-center"
+                 style="height: 80px">
 
                 <div class="akkor"><label class="checkbox-inline"><input type="checkbox"
                                                                          v-model="is_discount_for_AKKOR_members"
@@ -120,11 +126,12 @@
                     членом АККОР</label></div>
 
             </div>
-            <div class="col-md-6 d-flex justify-content-start flex-wrap align-items-end">
+            <div class="col-lg-6 col-md-12 d-flex justify-content-start flex-wrap align-items-end mt-2">
 
                 <div class="volume text-left">
                     <p>Цена за литр продукции:<br><span>{{basePrice}}</span> руб</p>
-                    <p>Стоимость объёма продукции с учетом скидки:<br><span>{{(basePrice*currentVolume).toFixed(2)}}</span> руб</p>
+                    <p>Стоимость объёма продукции с учетом
+                        скидки:<br><span>{{(basePrice*currentVolume).toFixed(2)}}</span> руб</p>
                 </div>
 
 
@@ -136,7 +143,7 @@
 
 
         <div class="row w-100 ">
-            <div class="col-md-6 discountblock seasons-radio">
+            <div class="col-lg-6 col-md-12 discountblock seasons-radio">
                 <ul class="p-2">
                     <li class="p-2">
                         <label><input type="radio" v-model="pay_method_discount" :value="2" name="optradio3"
@@ -153,11 +160,12 @@
                 </ul>
             </div>
 
-            <div class="col-md-6 d-flex justify-content-start flex-wrap align-items-end">
+            <div class="col-lg-6 col-md-12 d-flex justify-content-start flex-wrap align-items-end mt-2">
 
                 <div class="volume text-left">
                     <p>Цена за литр продукции:<br><span>{{basePrice}}</span> руб</p>
-                    <p>Стоимость объёма продукции с учетом скидки:<br><span>{{(basePrice*currentVolume).toFixed(2)}}</span> руб</p>
+                    <p>Стоимость объёма продукции с учетом
+                        скидки:<br><span>{{(basePrice*currentVolume).toFixed(2)}}</span> руб</p>
                 </div>
 
 
@@ -183,8 +191,8 @@
 
 
         <div class="row d-flex justify-content-center w-100 mt-2">
-            <div class="col-md-8 col-sm-12">
-                <button type="button" class="btn btn-success w-100" v-b-modal.modal-3>
+            <div class="col-lg-6 col-md-12 col-sm-12">
+                <button type="button" class="btn success-custom w-100" v-b-modal.modal-3>
                     Сделать заявку /
                     Заказать звонок
                 </button>
@@ -192,9 +200,10 @@
         </div>
 
         <div class="row d-flex justify-content-center mt-2 w-100" v-if="is_show">
-            <div class="col-md-8 col-sm-12">
+            <div class="col-lg-10 col-md-12 col-sm-12">
 
-                <button type="submit" class="btn btn-primary w-100">ШАГ 3: Расчет экономической эффективности
+                <button type="submit" class="btn btn-primary primary-custom w-100">ШАГ 3: Расчет экономической
+                    эффективности
                     применения
                     препарата «ЭКО-СП»
                 </button>
@@ -239,7 +248,7 @@
     export default {
         data() {
             return {
-                is_show:true,
+                is_show: true,
                 is_discount_for_AKKOR_members: false,
                 pay_method_discount: 0,
                 season_discount: 0,
@@ -302,6 +311,13 @@
 
         },
         methods: {
+            getCurrentDate() {
+                let current_datetime = new Date();
+                let day = current_datetime.getDate();
+                let month = current_datetime.getMonth()
+                let year = current_datetime.getFullYear();
+                return (day < 10 ? "0" + day : day) + "." + (month < 10 ? "0" + month : month) + "." + year;
+            },
             selectColor(dis) {
                 return (dis.to_vol != null ?
                         dis.from_vol <= this.currentVolume && dis.to_vol > this.currentVolume :
@@ -309,16 +325,16 @@
                 ) ? "color:red" : "color:lightskyblue";
             },
             submit() {
+                this.$emit("next-step")
                 this.$store.dispatch('setStepTwo', this.form)
                 this.is_show = false;
-                this.$emit("next-step")
+
             },
             sendMail() {
                 this.$bvModal.hide('modal-3')
-                axios.post('/send-message.php', this.form)
+                axios.post('mail_message.php', this.form)
                     .then(function (response) {
-                        // handle success
-                        console.log(response);
+                        this.notify("Заявка успешно отправлена!")
                     })
                     .catch(function (error) {
                         // handle error
@@ -327,12 +343,27 @@
                     .then(function () {
                         // always executed
                     });
+            },
+            notify(text) {
+                this.$notify({
+                    group: 'foo',
+                    title: 'ЭКО-СП',
+                    type: 'success',
+                    text: text
+                });
             }
         }
     }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+
+    .input-group-text {
+        padding: 0 15px 0 15px;
+        min-width: 80px;
+        display: flex;
+        justify-content: center;
+    }
 
     .volume {
         span {
@@ -407,7 +438,7 @@
     }
 
     .bordered {
-        border: 4px lightgray solid;
+        border: 5px solid #777;
         box-sizing: border-box;
 
         & > div {
@@ -418,7 +449,7 @@
             span {
                 background: white;
                 padding: 10px;
-                border: 2px lightskyblue solid;
+                border: 2px solid #f00;
                 border-radius: 5px;
                 font-weight: 800;
                 color: black;
@@ -437,5 +468,9 @@
                 border-bottom: none;
             }
         }
+    }
+
+    .bg-success-custom {
+        background: #15b833;
     }
 </style>

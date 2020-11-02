@@ -4,12 +4,15 @@ import store from './store/index'
 import VueTheMask from 'vue-the-mask'
 import {BootstrapVue, IconsPlugin} from 'bootstrap-vue'
 import Vuex from 'vuex';
+import Notifications from 'vue-notification'
+import VueScrollTo from 'vue-scrollto';
 
+Vue.use(VueScrollTo)
 window.$ = require("jquery")
 window.axios = require('axios').default;
 
 Vue.use(Vuex);
-
+Vue.use(Notifications)
 Vue.use(VueTheMask)
 
 // Install BootstrapVue
