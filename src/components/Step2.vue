@@ -8,10 +8,12 @@
             <div class="col-md-5">
                 <div class="input-group mb-3">
                     <input name="humiccost"
-                           type="text"
+                           type="number"
+                           pattern="[0-9]{1,9}"
+                           min="1"
                            maxlength="10"
                            v-model="humic_price"
-                           class="form-control form-control-lg">
+                           class="form-control form-control-lg" required>
                     <div class="input-group-append">
                         <span class="input-group-text">руб/л</span>
                     </div>
@@ -77,7 +79,7 @@
                 <div class="row seasons-radio mt-2">
                     <ul class="p-2">
                         <li class="p-2">
-                            <label><input type="radio" v-model="season_discount" :value="0" name="optradio2"
+                            <label><input type="radio" v-model="season_discount" checked :value="0" name="optradio2"
                                           class="mr-2">Без скидки</label>
                         </li>
                         <li class="p-2">
@@ -250,7 +252,7 @@
             return {
                 is_show: true,
                 is_discount_for_AKKOR_members: false,
-                pay_method_discount: 0,
+                pay_method_discount: 2,
                 season_discount: 0,
                 humic_price: null,
                 form: {
@@ -314,7 +316,7 @@
             getCurrentDate() {
                 let current_datetime = new Date();
                 let day = current_datetime.getDate();
-                let month = current_datetime.getMonth()
+                let month = current_datetime.getMonth()+1
                 let year = current_datetime.getFullYear();
                 return (day < 10 ? "0" + day : day) + "." + (month < 10 ? "0" + month : month) + "." + year;
             },

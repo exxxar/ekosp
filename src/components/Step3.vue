@@ -98,7 +98,7 @@
                 <h5>Прибавка в деньгах<strong class="text-danger">*</strong>: <span>{{getIncreaseMoney()}}</span> руб
                 </h5>
             </div>
-
+            <div class="w-100"></div>
             <div class="col-lg-8 col-md-12 col-sm-12">
                 <p>Дополнительная выручка от продажи дополнительного объема урожая полученного от увеличения
                     урожайности.</p>
@@ -110,7 +110,7 @@
                 <h5 class="w-100">Чистая прибыль <strong class="text-danger">*</strong>: <span>{{getNetProfit()}}</span>
                     руб</h5>
             </div>
-
+            <div class="w-100"></div>
             <div class="col-lg-8 col-md-12 col-sm-12">
                 <p>Расчетная «чистая прибыль» от использования ЭКО-СП: дополнительная выручка минус расходы на покупку и
                     использование «ЭКО-СП» совместно с СЗР.</p>
@@ -122,7 +122,7 @@
                 <h5>Рентабельность гектара <strong class="text-danger">*</strong>: <span>{{getProfitability()}}</span>
                     руб</h5>
             </div>
-
+            <div class="w-100"></div>
             <div class="col-lg-8 col-md-12 col-sm-12">
                 <p>Экономическая эффективность использования ЭКО-СП на 1 га</p>
             </div>

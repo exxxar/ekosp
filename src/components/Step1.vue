@@ -59,7 +59,7 @@
                             <h4>Норма расхода рабочего раствора при обработке семян(л/т):</h4>
                         </div>
                         <div class="col-md-1 d-flex justify-content-center">
-                            <a href="#calc-about" v-b-modal.modal-1>
+                            <a href="#calc-about" class="d-flex justify-content-center align-items-center text-center" v-b-modal.modal-1>
                                 <div class="calc-about">?</div>
                             </a>
                         </div>
@@ -135,13 +135,16 @@
                     </div>
                 </div>
             </div>
+            <transition-group name="fade" tag="div" >
             <div class="row d-flex justify-content-center flex-wrap mt-2 w-100"
                  v-for="(vegetation,index) in form.vegetation"
-                 v-if="form.vegetation">
+                 v-bind:key="index"
+                 v-show="form.vegetation">
 
                 <div class="col-md-12 d-flex justify-content-start w-100 mb-3">
                     <h4 class="label-veg">{{prepareTextNumber(index)}} обработка по вегетации
                     </h4>
+                    <a class="btn btn-link" v-if="index!==0" @click="removeVegetation(index)">Убрать</a>
                 </div>
 
                 <div class="col-md-8 col-sm-10 col-12 ">
@@ -161,7 +164,7 @@
                                class="form-control form-control-lg"
                                placeholder="Норма расхода рабочего раствора (от 90л до 270л)"
                                v-model="vegetation.seeding_rate"
-                               v-on:keyup="onChangeVegetation(index)" required>
+                               v-on:keyup="onChangeAllVeg()" required>
                         <div class="input-group-append">
                             <span class="input-group-text">л/га</span>
                         </div>
@@ -175,7 +178,7 @@
                         <h4>Норма внесения препарата «ЭКО-СП» для обработки по вегетации:</h4>
                     </div>
                     <div class="col-md-12 col-lg-1 d-flex justify-content-center">
-                        <a href="#calc-about-2" v-b-modal.modal-2>
+                        <a href="#calc-about-2"  class="d-flex justify-content-center align-items-center text-center" v-b-modal.modal-2>
                             <div class="calc-about">?</div>
                         </a>
                     </div>
@@ -183,8 +186,8 @@
 
 
                 <div class="row flex-nowrap shkala-long justify-content-between w-100">
-                    <div v-for="(rate,index) in application_rate_of_the_drug_vegetation">
-                        <div class="shkala-circle active" v-if="vegetation.application_rate_selected===index"></div>
+                    <div v-for="(rate,index2) in application_rate_of_the_drug_vegetation">
+                        <div class="shkala-circle active" v-if="vegetation.application_rate_selected==index2"></div>
                         <div class="shkala-circle" v-else></div>
                         <span>{{rate}}л</span>
                     </div>
@@ -203,7 +206,7 @@
                 </div>
 
             </div>
-
+            </transition-group>
             <button type="button" class="btn btn-primary primary-custom  mb-2" @click="addVegetation"
                     v-if="this.form.vegetation.length<3">Добавить еще обработку
             </button>
@@ -225,7 +228,7 @@
 
 
         <b-modal id="modal-1" title="Норма расхода рабочего раствора при обработке семян(л/т)">
-            <p class="my-4">Hello from modal!</p>
+            <p class="my-4">При выборе нормы расхода рабочего раствора внесение препарата рассчитывается исходя из оптимальной концентрации гумусовых веществ в водном растворе(0,03%), при которой наблюдается наиболее эффективное воздействие на рост и развитие семени.</p>
 
             <template #modal-footer="{ cancel }">
                 <b-button size="sm" variant="info" @click="cancel()">
@@ -236,8 +239,7 @@
 
 
         <b-modal id="modal-2" title="Норма внесения препарата «ЭКО-СП» для обработки семян">
-            <p class="my-4">Hello from modal!</p>
-
+            <p class="my-4">При выборе нормы расхода рабочего раствора внесение препарата рассчитывается исходя из оптимальной концентрации гумусовых веществ в водном растворе (0,01%) баковой смеси, при которой наблюдается наиболее эффективное воздействие на рост и развитие растений.</p>
             <template #modal-footer="{ cancel }">
                 <b-button size="sm" variant="info" @click="cancel()">
                     Спасибо, прочитал!
@@ -275,7 +277,7 @@
 
                 form: {
                     crop_area: null,
-                    need_seed_preparation: true,
+                    need_seed_preparation: false,
                     prepare: {
                         seeding_rate: null,
                         consumption_rate_selected: 2,
@@ -333,33 +335,36 @@
                 }
 
                 this.form.summary_required_volume = this.form.prepare.required_volume;
-                this.form.vegetation.forEach(item => {
+
+                for (let index in  this.form.vegetation) {
+                    let item =  this.form.vegetation[index]
+
                     this.form.summary_required_volume += item.required_volume
-                })
+                }
+
 
 
             },
             onChangeAllVeg() {
-                for (let i = 0; i < this.form.vegetation.length; i++) {
-                    this.onChangeVegetation(i)
-                }
-            },
-            onChangeVegetation(vegIndex) {
 
+                for (let vegIndex in  this.form.vegetation)
+                {
+                    let item = this.form.vegetation[vegIndex];
 
-                this.form.vegetation.forEach(item => {
                     let rateFound = false;
                     for (let index in this.rate) {
                         let sub = this.rate[index]
 
                         if (sub.from <= item.seeding_rate && item.seeding_rate <= sub.to) {
                             this.form.vegetation[vegIndex].application_rate_selected = parseInt(index)
+
                             this.form.vegetation[vegIndex].required_volume = this.form.crop_area * this.application_rate_of_the_drug_vegetation[parseInt(index)]
 
+                            let s1 =  this.form.vegetation[vegIndex].seeding_rate;
 
-                            let s1 = this.form.vegetation[vegIndex].required_volume;
+                            this.form.vegetation[vegIndex].concentration_of_humic_substances = s1 > 0 ? this.application_rate_of_the_drug_vegetation[parseInt(index)] * 0.015 /s1 * 100 : 0;
 
-                           this.form.vegetation[vegIndex].concentration_of_humic_substances = s1 > 0 ? this.application_rate_of_the_drug_vegetation[parseInt(index)] * 0.015 / s1 * 100 : 0;
+
 
 
                             rateFound = true;
@@ -371,11 +376,12 @@
                     if (!rateFound)
                         this.form.vegetation[vegIndex].application_rate_selected = this.rate.length - 1
 
-                })
-
-
+                }
                 this.calc()
+                this.$store.dispatch('setStepOne', this.form)
+
             },
+
             checkConsumptionRate(index) {
 
                 this.form.prepare.application_rate_selected = index
@@ -392,6 +398,13 @@
             prepareTextNumber(number) {
                 let arr = ["Первая", "Вторая", "Третья"];
                 return arr[number > 0 && number < arr.length ? number : 0]
+            },
+            removeVegetation(index){
+                if (index===0)
+                    return;
+
+                this.form.vegetation.splice(index,1)
+                this.calc()
             },
             addVegetation() {
                 if (this.form.vegetation.length <= 2) {
@@ -411,6 +424,37 @@
 </script>
 
 <style lang="scss" scoped>
+    .fade-enter-active, .fade-leave-active {
+        animation: bounce-in .5s;
+    }
+    .fade-enter, .fade-leave-active {
+        animation: bounce-out .5s;
+    }
+
+
+    @keyframes bounce-in {
+        0% {
+            transform: scale(0);
+        }
+        50% {
+            transform: scale(1.5);
+        }
+        100% {
+            transform: scale(1);
+        }
+    }
+    @keyframes bounce-out {
+        0% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.5);
+        }
+        100% {
+            transform: scale(0);
+        }
+    }
+
     .need_vegetation {
         border: 1px lightgray solid;
         border-radius: 5px;

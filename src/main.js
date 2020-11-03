@@ -15,6 +15,18 @@ Vue.use(Vuex);
 Vue.use(Notifications)
 Vue.use(VueTheMask)
 
+Vue.component(
+    'request-form',
+    require('./components/ReuestForm.vue').default
+);
+
+
+Vue.component(
+    'calc-form',
+    require('./App.vue').default
+);
+
+
 // Install BootstrapVue
 Vue.use(BootstrapVue)
 // Optionally install the BootstrapVue icon components plugin

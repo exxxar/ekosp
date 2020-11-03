@@ -1,5 +1,5 @@
 <template>
-    <div id="app">
+    <div>
         <notifications group="foo" />
         <div class="container-md">
             <div class="row d-flex justify-content-center flex-wrap">
