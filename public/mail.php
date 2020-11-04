@@ -6,9 +6,9 @@ namespace ekosp\calc;
 use Carbon\Carbon;
 use Mpdf\Mpdf;
 use Mpdf\Output\Destination;
+use NumberToWords\NumberToWords;
 use PHPHtmlParser\Dom;
 use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
 // Load Composer's autoloader
@@ -48,12 +48,17 @@ $mpdf->WriteHTML($html_head);
 
 $now = Carbon::now();
 
+$volume = round($volume);
+
 $numberToWords = new NumberToWords();
 
 // build a new currency transformer using the RFC 3066 language identifier
-$numberTransformer = $numberToWords->getCurrencyTransformer('ru');
+$numberTransformer = $numberToWords->getNumberTransformer('ru');
 
-$volume_to_text = $numberTransformer->toWords(intval($volume));
+$volume_to_text = $numberTransformer->toWords(intval($volume)) ?? '';
+
+
+
 
 $month = [
     "Января", "Февраля", "Марта", "Апреля", "Мая", "Июня", "Июля", "Августа", "Сентября", "Октября", "Ноября", "Декабря"
