@@ -38,7 +38,7 @@ try {
     $mail->Port = 587;                                    // TCP port to connect to, use 465 for `PHPMailer::ENCRYPTION_SMTPS` above
 
     //Recipients
-    $mail->setFrom('from@example.com', 'Mailer');
+    $mail->setFrom('info@eko-sp.ru', 'EKO-SP');
     $mail->addAddress($email, $name);     // Add a recipient
     $mail->addAddress('info@eko-sp.ru');               // Name is optional
     $mail->addAddress('exxxa@egmail.com',"Тестировщик");

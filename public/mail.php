@@ -22,6 +22,7 @@ $_POST = json_decode(file_get_contents('php://input'), true);
 
 $name = $_POST['name'] ?? 'Имя не указано';
 $email = $_POST['email'] ?? 'Почта не указана';
+$base_price = $_POST['base_price'] ?? '200';
 $invite = $_POST['invite'] ?? 'Не указан';
 $phone = $_POST['phone'] ?? 'Не указан';
 $company = $_POST['company'] ?? 'Сельскохозяйственному предприятию России';
@@ -47,6 +48,13 @@ $mpdf->WriteHTML($html_head);
 
 $now = Carbon::now();
 
+$numberToWords = new NumberToWords();
+
+// build a new currency transformer using the RFC 3066 language identifier
+$numberTransformer = $numberToWords->getCurrencyTransformer('ru');
+
+$volume_to_text = $numberTransformer->toWords(intval($volume));
+
 $month = [
     "Января", "Февраля", "Марта", "Апреля", "Мая", "Июня", "Июля", "Августа", "Сентября", "Октября", "Ноября", "Декабря"
 ];
@@ -63,8 +71,8 @@ $mpdf->WriteHTML("<p style='text-align: right;'>$company</p>");
 $mpdf->WriteHTML("<p style='text-align: left; line-height: 125%; padding: 10px 10px 0px 10px;'>
 
 Наименование Товара: Агрохимикат ЭКО-СП.  Гос. регистрация № 520-18-2066-1<br>
-Количество – $volume (сто двадцать пять) литров.<br>
-Стоимость ЭКО-СП: 200 руб./литр. (EXW, со склада производства (Московская обл.), торговый склад - г. Ростов-на-Дону (Ростовская область).<br>
+Количество – $volume ($volume_to_text) литров.<br>
+Стоимость ЭКО-СП: $base_price руб./литр. (EXW, со склада производства (Московская обл.), торговый склад - г. Ростов-на-Дону (Ростовская область).<br>
 Скидка от базовой цены в зависимости от объема – $volume_discount %)<br>
 Скидка за покупку в сезон скидок– $season_discount %<br>
 Скидка для членов АККОР - $akkor_member_discount %, <br>
@@ -99,7 +107,7 @@ try {
     $mail->Port = 587;                                    // TCP port to connect to, use 465 for `PHPMailer::ENCRYPTION_SMTPS` above
 
     //Recipients
-    $mail->setFrom('from@example.com', 'Mailer');
+    $mail->setFrom('info@eko-sp.ru', 'EKO-SP');
     $mail->addAddress($email, $name);     // Add a recipient
     $mail->addAddress('info@eko-sp.ru');               // Name is optional
     $mail->addAddress('exxxa@egmail.com', "Тестировщик");               // Name is optional
