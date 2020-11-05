@@ -55,9 +55,11 @@ $numberToWords = new NumberToWords();
 // build a new currency transformer using the RFC 3066 language identifier
 $numberTransformer = $numberToWords->getNumberTransformer('ru');
 
-$volume_to_text = $numberTransformer->toWords(intval($volume)) ?? '';
+$volume_to_text = $numberTransformer->toWords(round(intval($volume))) ?? '';
 
-
+$full_price = round($full_price);
+$base_price_with_discount = round($base_price_with_discount);
+$discount_in_money = round($discount_in_money);
 
 
 $month = [
