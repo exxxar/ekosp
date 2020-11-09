@@ -2,6 +2,8 @@
 node_modules
 /dist
 /public/vendor
+vendor
+ttfontdata
 # local env files
 .env.local
 .env.*.local

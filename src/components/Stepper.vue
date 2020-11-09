@@ -40,21 +40,27 @@
                         this.is_1_show = true;
                         console.log("is_1_show")
                         this.$nextTick(()=>{
-                            this.$scrollTo("#step1")
+                            this.$scrollTo("#step1", {
+                                offset:-100
+                            } )
                         })
                         break;
                     case 2:
                         this.is_2_show = true;
                         console.log("is_2_show")
                         this.$nextTick(()=>{
-                            this.$scrollTo("#step2")
+                            this.$scrollTo("#step2",{
+                                offset:-150
+                            })
                         })
                         break;
                     case 3:
                         this.is_3_show = true;
                         console.log("is_3_show")
                         this.$nextTick(()=>{
-                            this.$scrollTo("#step3")
+                            this.$scrollTo("#step3",{
+                                offset:-150
+                            })
 
                         })
                         break;

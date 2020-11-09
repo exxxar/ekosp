@@ -59,7 +59,8 @@
                             <h4>Норма расхода рабочего раствора при обработке семян(л/т):</h4>
                         </div>
                         <div class="col-md-1 d-flex justify-content-center">
-                            <a href="#calc-about" class="d-flex justify-content-center align-items-center text-center" v-b-modal.modal-1>
+                            <a href="#calc-about" class="d-flex justify-content-center align-items-center text-center"
+                               v-b-modal.modal-1>
                                 <div class="calc-about">?</div>
                             </a>
                         </div>
@@ -135,77 +136,79 @@
                     </div>
                 </div>
             </div>
-            <transition-group name="fade" tag="div" >
-            <div class="row d-flex justify-content-center flex-wrap mt-2 w-100"
-                 v-for="(vegetation,index) in form.vegetation"
-                 v-bind:key="index"
-                 v-show="form.vegetation">
+            <transition-group name="smooth" tag="div">
+                <div class="row d-flex justify-content-center flex-wrap mt-2 w-100"
+                     v-for="(vegetation,index) in form.vegetation"
+                     v-bind:key="index"
+                     v-show="form.vegetation">
 
-                <div class="col-md-12 d-flex justify-content-start w-100 mb-3">
-                    <h4 class="label-veg">{{prepareTextNumber(index)}} обработка по вегетации
-                    </h4>
-                    <a class="btn btn-link" v-if="index!==0" @click="removeVegetation(index)">Убрать</a>
-                </div>
+                    <div class="col-md-12 d-flex justify-content-start w-100 mb-3">
+                        <h4 class="label-veg">{{prepareTextNumber(index)}} обработка по вегетации
+                        </h4>
+                        <a class="btn btn-link" v-if="index!==0" @click="removeVegetation(index)">Убрать</a>
+                    </div>
 
-                <div class="col-md-8 col-sm-10 col-12 ">
+                    <div class="col-md-8 col-sm-10 col-12 ">
 
-                    <p class="alert-danger"
-                       v-if="(vegetation.seeding_rate!=null&&vegetation.seeding_rate!=='')&&(vegetation.seeding_rate<90||vegetation.seeding_rate>270)">
-                        Введите корректные данные нормы рабочего раствора!</p>
+                        <p class="alert-danger"
+                           v-if="(vegetation.seeding_rate!=null&&vegetation.seeding_rate!=='')&&(vegetation.seeding_rate<90||vegetation.seeding_rate>270)">
+                            Введите корректные данные нормы рабочего раствора!</p>
 
-                    <div class="input-group mb-3">
-                        <input name="seedsnorm"
-                               type="text"
-                               maxlength="5"
-                               v-mask="['#########']"
-                               min="90"
-                               max="270"
-                               pattern="[0-9]{1,9}"
-                               class="form-control form-control-lg"
-                               placeholder="Норма расхода рабочего раствора (от 90л до 270л)"
-                               v-model="vegetation.seeding_rate"
-                               v-on:keyup="onChangeAllVeg()" required>
-                        <div class="input-group-append">
-                            <span class="input-group-text">л/га</span>
+                        <div class="input-group mb-3">
+                            <input name="seedsnorm"
+                                   type="text"
+                                   maxlength="5"
+                                   v-mask="['#########']"
+                                   min="90"
+                                   max="270"
+                                   pattern="[0-9]{1,9}"
+                                   class="form-control form-control-lg"
+                                   placeholder="Норма расхода рабочего раствора (от 90л до 270л)"
+                                   v-model="vegetation.seeding_rate"
+                                   v-on:keyup="onChangeAllVeg()" required>
+                            <div class="input-group-append">
+                                <span class="input-group-text">л/га</span>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="row w-100">
+                        <div class="col-md-12 col-lg-11">
+                            <h4>Норма внесения препарата «ЭКО-СП» для обработки по вегетации:</h4>
+                        </div>
+                        <div class="col-md-12 col-lg-1 d-flex justify-content-center">
+                            <a href="#calc-about-2" class="d-flex justify-content-center align-items-center text-center"
+                               v-b-modal.modal-2>
+                                <div class="calc-about">?</div>
+                            </a>
                         </div>
                     </div>
 
-                </div>
 
-
-                <div class="row w-100">
-                    <div class="col-md-12 col-lg-11">
-                        <h4>Норма внесения препарата «ЭКО-СП» для обработки по вегетации:</h4>
+                    <div class="row flex-nowrap shkala-long justify-content-between w-100">
+                        <div v-for="(rate,index2) in application_rate_of_the_drug_vegetation">
+                            <div class="shkala-circle active" v-if="vegetation.application_rate_selected==index2"></div>
+                            <div class="shkala-circle" v-else></div>
+                            <span>{{rate}}л</span>
+                        </div>
                     </div>
-                    <div class="col-md-12 col-lg-1 d-flex justify-content-center">
-                        <a href="#calc-about-2"  class="d-flex justify-content-center align-items-center text-center" v-b-modal.modal-2>
-                            <div class="calc-about">?</div>
-                        </a>
+
+
+                    <div class="row w-100 justify-content-center d-flex">
+                        <p class="text-center">Концентрация гумусовых веществ: <span>{{vegetation.concentration_of_humic_substances.toFixed(4)}}</span>
+                            %
+                        </p>
                     </div>
-                </div>
-
-
-                <div class="row flex-nowrap shkala-long justify-content-between w-100">
-                    <div v-for="(rate,index2) in application_rate_of_the_drug_vegetation">
-                        <div class="shkala-circle active" v-if="vegetation.application_rate_selected==index2"></div>
-                        <div class="shkala-circle" v-else></div>
-                        <span>{{rate}}л</span>
+                    <div class="row w-100 d-flex justify-content-center">
+                        <p class="volume">Необходимый объём «ЭКО-СП»:
+                            <span>{{vegetation.required_volume.toFixed(2)}}</span>
+                            л
+                        </p>
                     </div>
-                </div>
 
-
-                <div class="row w-100 justify-content-center d-flex">
-                    <p class="text-center">Концентрация гумусовых веществ: <span>{{vegetation.concentration_of_humic_substances.toFixed(4)}}</span>
-                        %
-                    </p>
                 </div>
-                <div class="row w-100 d-flex justify-content-center">
-                    <p class="volume">Необходимый объём «ЭКО-СП»: <span>{{vegetation.required_volume.toFixed(2)}}</span>
-                        л
-                    </p>
-                </div>
-
-            </div>
             </transition-group>
             <button type="button" class="btn btn-primary primary-custom  mb-2" @click="addVegetation"
                     v-if="this.form.vegetation.length<3">Добавить еще обработку
@@ -228,7 +231,9 @@
 
 
         <b-modal id="modal-1" title="Норма расхода рабочего раствора при обработке семян(л/т)">
-            <p class="my-4">При выборе нормы расхода рабочего раствора внесение препарата рассчитывается исходя из оптимальной концентрации гумусовых веществ в водном растворе(0,03%), при которой наблюдается наиболее эффективное воздействие на рост и развитие семени.</p>
+            <p class="my-4">При выборе нормы расхода рабочего раствора внесение препарата рассчитывается исходя из
+                оптимальной концентрации гумусовых веществ в водном растворе(0,03%), при которой наблюдается наиболее
+                эффективное воздействие на рост и развитие семени.</p>
 
             <template #modal-footer="{ cancel }">
                 <b-button size="sm" variant="info" @click="cancel()">
@@ -238,8 +243,10 @@
         </b-modal>
 
 
-        <b-modal id="modal-2" title="Норма внесения препарата «ЭКО-СП» для обработки семян">
-            <p class="my-4">При выборе нормы расхода рабочего раствора внесение препарата рассчитывается исходя из оптимальной концентрации гумусовых веществ в водном растворе (0,01%) баковой смеси, при которой наблюдается наиболее эффективное воздействие на рост и развитие растений.</p>
+        <b-modal id="modal-2" title="Норма внесения препарата «ЭКО-СП» по вегетации">
+            <p class="my-4">При выборе нормы расхода рабочего раствора внесение препарата рассчитывается исходя из
+                оптимальной концентрации гумусовых веществ в водном растворе (0,01%) баковой смеси, при которой
+                наблюдается наиболее эффективное воздействие на рост и развитие растений.</p>
             <template #modal-footer="{ cancel }">
                 <b-button size="sm" variant="info" @click="cancel()">
                     Спасибо, прочитал!
@@ -315,6 +322,14 @@
             }
         },
         methods: {
+            notify(text) {
+                this.$notify({
+                    group: 'foo',
+                    title: 'ЭКО-СП',
+                    type: 'success',
+                    text: text
+                });
+            },
             calc() {
 
                 this.form.summary_required_volume = 0
@@ -336,19 +351,17 @@
 
                 this.form.summary_required_volume = this.form.prepare.required_volume;
 
-                for (let index in  this.form.vegetation) {
-                    let item =  this.form.vegetation[index]
+                for (let index in this.form.vegetation) {
+                    let item = this.form.vegetation[index]
 
                     this.form.summary_required_volume += item.required_volume
                 }
 
 
-
             },
             onChangeAllVeg() {
 
-                for (let vegIndex in  this.form.vegetation)
-                {
+                for (let vegIndex in this.form.vegetation) {
                     let item = this.form.vegetation[vegIndex];
 
                     let rateFound = false;
@@ -360,11 +373,9 @@
 
                             this.form.vegetation[vegIndex].required_volume = this.form.crop_area * this.application_rate_of_the_drug_vegetation[parseInt(index)]
 
-                            let s1 =  this.form.vegetation[vegIndex].seeding_rate;
+                            let s1 = this.form.vegetation[vegIndex].seeding_rate;
 
-                            this.form.vegetation[vegIndex].concentration_of_humic_substances = s1 > 0 ? this.application_rate_of_the_drug_vegetation[parseInt(index)] * 0.015 /s1 * 100 : 0;
-
-
+                            this.form.vegetation[vegIndex].concentration_of_humic_substances = s1 > 0 ? this.application_rate_of_the_drug_vegetation[parseInt(index)] * 0.015 / s1 * 100 : 0;
 
 
                             rateFound = true;
@@ -399,11 +410,12 @@
                 let arr = ["Первая", "Вторая", "Третья"];
                 return arr[number > 0 && number < arr.length ? number : 0]
             },
-            removeVegetation(index){
-                if (index===0)
+            removeVegetation(index) {
+                if (index === 0)
                     return;
 
-                this.form.vegetation.splice(index,1)
+                this.form.vegetation.splice(index, 1)
+                this.notify(this.prepareTextNumber(index) + " обработка по вегетации удалена!")
                 this.calc()
             },
             addVegetation() {
@@ -415,7 +427,7 @@
                         concentration_of_humic_substances: 0.01,
                         required_volume: 0,
                     })
-
+                    this.notify("Добавлена "+(this.prepareTextNumber(this.form.vegetation.length-1).toLowerCase())+" обработка по вегетации!")
                     this.calc()
                 }
             }
@@ -427,10 +439,19 @@
     .fade-enter-active, .fade-leave-active {
         animation: bounce-in .5s;
     }
+
     .fade-enter, .fade-leave-active {
         animation: bounce-out .5s;
     }
 
+    .smooth-enter-active, .smooth-leave-active {
+        transition: opacity 1.5s;
+
+    }
+
+    .smooth-enter, .smooth-leave-to {
+        opacity: 0;
+    }
 
     @keyframes bounce-in {
         0% {
@@ -443,6 +464,7 @@
             transform: scale(1);
         }
     }
+
     @keyframes bounce-out {
         0% {
             transform: scale(1);

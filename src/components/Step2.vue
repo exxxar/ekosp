@@ -8,12 +8,13 @@
             <div class="col-md-5">
                 <div class="input-group mb-3">
                     <input name="humiccost"
-                           type="number"
+                           type="text"
+                           maxlength="5"
+                           v-mask="['#########']"
                            pattern="[0-9]{1,9}"
-                           min="1"
-                           maxlength="10"
+                           placeholder="Цена"
                            v-model="humic_price"
-                           class="form-control form-control-lg" required>
+                           class="form-control form-control-lg " required>
                     <div class="input-group-append">
                         <span class="input-group-text">руб/л</span>
                     </div>
@@ -48,9 +49,9 @@
             <div class="col-md-6 d-flex justify-content-start flex-wrap align-items-end mt-2">
 
                 <div class="volume text-left ">
-                    <p>Цена за литр продукции:<br><span>{{basePrice}}</span> руб</p>
+                    <p>Цена за литр продукции:<br><span>{{numberPrepare(basePrice)}}</span> руб</p>
                     <p>Стоимость объёма продукции с учетом
-                        скидки:<br><span>{{(basePrice*currentVolume).toFixed(2)}}</span> руб</p>
+                        скидки:<br><span>{{numberPrepare((basePrice*currentVolume).toFixed(0))}}</span> руб</p>
                 </div>
 
 
@@ -104,9 +105,9 @@
             <div class="col-lg-6 col-md-12 d-flex justify-content-start flex-wrap align-items-end mt-2">
 
                 <div class="volume text-left">
-                    <p>Цена за литр продукции:<br><span>{{basePrice}}</span> руб</p>
+                    <p>Цена за литр продукции:<br><span>{{numberPrepare(basePrice)}}</span> руб</p>
                     <p>Стоимость объёма продукции с учетом
-                        скидки:<br><span>{{(basePrice*currentVolume).toFixed(2)}}</span> руб</p>
+                        скидки:<br><span>{{numberPrepare((basePrice*currentVolume).toFixed(0))}}</span> руб</p>
                 </div>
 
 
@@ -131,9 +132,9 @@
             <div class="col-lg-6 col-md-12 d-flex justify-content-start flex-wrap align-items-end mt-2">
 
                 <div class="volume text-left">
-                    <p>Цена за литр продукции:<br><span>{{basePrice}}</span> руб</p>
+                    <p>Цена за литр продукции:<br><span>{{numberPrepare(basePrice)}}</span> руб</p>
                     <p>Стоимость объёма продукции с учетом
-                        скидки:<br><span>{{(basePrice*currentVolume).toFixed(2)}}</span> руб</p>
+                        скидки:<br><span>{{numberPrepare((basePrice*currentVolume).toFixed(0))}}</span> руб</p>
                 </div>
 
 
@@ -148,7 +149,7 @@
             <div class="col-lg-6 col-md-12 discountblock seasons-radio">
                 <ul class="p-2">
                     <li class="p-2">
-                        <label><input type="radio" v-model="pay_method_discount" :value="2" name="optradio3"
+                        <label><input type="radio" v-model="pay_method_discount" checked :value="2" name="optradio3"
                                       class="mr-2">Без скидки</label>
                     </li>
                     <li class="p-2">
@@ -165,9 +166,9 @@
             <div class="col-lg-6 col-md-12 d-flex justify-content-start flex-wrap align-items-end mt-2">
 
                 <div class="volume text-left">
-                    <p>Цена за литр продукции:<br><span>{{basePrice}}</span> руб</p>
+                    <p>Цена за литр продукции:<br><span>{{numberPrepare(basePrice)}}</span> руб</p>
                     <p>Стоимость объёма продукции с учетом
-                        скидки:<br><span>{{(basePrice*currentVolume).toFixed(2)}}</span> руб</p>
+                        скидки:<br><span>{{numberPrepare((basePrice*currentVolume).toFixed(0))}}</span> руб</p>
                 </div>
 
 
@@ -183,11 +184,11 @@
                 <p>Ваша общая скидка:<br><span>{{summaryDiscount}}</span> %</p>
             </div>
             <div class="col-md-7">
-                <p>Ваша цена за литр продукции:<br><span>{{basePrice}}</span> руб</p>
+                <p>Ваша цена за литр продукции:<br><span>{{numberPrepare(basePrice)}}</span> руб</p>
             </div>
             <div class="col-md-12">
                 Стоимость объёма продукции ({{currentVolume.toFixed(2)}} л.) с учётом
-                скидки:<br><span>{{(basePrice*currentVolume).toFixed(2)}}</span> руб
+                скидки:<br><span>{{numberPrepare((basePrice*currentVolume).toFixed(0))}}</span> руб
             </div>
         </div>
 
@@ -254,7 +255,7 @@
                 is_discount_for_AKKOR_members: false,
                 pay_method_discount: 2,
                 season_discount: 0,
-                humic_price: null,
+                humic_price: '',
                 form: {
                     name: '',
                     phone: '',
@@ -266,17 +267,17 @@
         },
         watch: {
             humic_price: function (newVal) {
-                return this.$store.dispatch("setBasePrice", newVal)
+                this.$store.dispatch("setBasePrice", newVal);
             },
             is_discount_for_AKKOR_members: function (newVal) {
-                return this.$store.dispatch("setIsAkkorMember", newVal)
+                this.$store.dispatch("setIsAkkorMember", newVal)
             },
             pay_method_discount: function (newVal) {
-                return this.$store.dispatch("setPayMethod", newVal)
+                this.$store.dispatch("setPayMethod", newVal)
 
             },
             season_discount: function (newVal) {
-                return this.$store.dispatch("setSeasonDiscount", newVal)
+                this.$store.dispatch("setSeasonDiscount", newVal)
             }
         },
         computed: {
@@ -309,14 +310,16 @@
                 this.form.phone = this.stepZero.phone
             }
 
-            this.humic_price = this.basePrice
 
         },
         methods: {
+            numberPrepare(number) {
+                return ('' + number).replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 ');
+            },
             getCurrentDate() {
                 let current_datetime = new Date();
                 let day = current_datetime.getDate();
-                let month = current_datetime.getMonth()+1
+                let month = current_datetime.getMonth() + 1
                 let year = current_datetime.getFullYear();
                 return (day < 10 ? "0" + day : day) + "." + (month < 10 ? "0" + month : month) + "." + year;
             },

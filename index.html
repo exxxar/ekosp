@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+
+<style>
+    table {
+        font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+        font-size: 14px;
+        border-collapse: collapse;
+        text-align: center;
+    }
+    th, td:first-child {
+        background: #AFCDE7;
+        color: white;
+        padding: 10px 20px;
+    }
+    th, td {
+        border-style: solid;
+        border-width: 0 1px 1px 0;
+        border-color: white;
+    }
+    td {
+        background: #D8E6F3;
+    }
+    th:first-child, td:first-child {
+        text-align: left;
+    }
+</style>
+
+<table style='width: 100%; border:1px lightgray solid;border-spacing: 0 10px;'>
+    <tr style='border: 3px solid purple;'>
+        <td style="border:1px black solid;">Наименование Товара:</td>
+        <td style="border:1px black solid;">Агрохимикат ЭКО-СП </td>
+    </tr>
+
+    <tr>
+        <td>Количество:</td>
+        <td>$volume ($volume_to_text) литров.</td>
+    </tr>
+
+    <tr>
+        <td>Стоимость ЭКО-СП:</td>
+        <td>$base_price руб./литр. (EXW, со склада производства (Московская обл.), торговый склад - г. Батайск  (Ростовская область)</td>
+    </tr>
+
+    <tr>
+        <td>Площадь обработки, га</td>
+        <td></td>
+    </tr>
+
+    <tr>
+        <td>Скидка от базовой цены в зависимости от объема</td>
+        <td>$volume_discount %</td>
+    </tr>
+
+
+    <tr>
+        <td>Скидка за покупку в сезон скидок</td>
+        <td>$season_discount %</td>
+    </tr>
+
+    <tr>
+        <td>Скидка для членов АККОР</td>
+        <td>$akkor_member_discount %</td>
+    </tr>
+
+
+    <tr>
+        <td>Скидка от модели оплаты:</td>
+        <td>$pay_method_discount %  ($pay_method)</td>
+    </tr>
+
+    <tr style='background-color: #00a8e6;'>
+        <td></td>
+        <td></td>
+    </tr>
+
+    <tr>
+        <td><strong>Общая Скидка</strong></td>
+        <td>$summary_discount %</td>
+    </tr>
+
+    <tr>
+        <td><strong>Скидка в рублях</strong></td>
+        <td>$discount_in_money руб./литр.</td>
+    </tr>
+
+    <tr>
+        <td><strong>Итоговая цена со скидкой</strong></td>
+        <td>$base_price_with_discount руб./литр, в том числе НДС.</td>
+    </tr>
+
+    <tr>
+        <td><strong>Стоимость за партию</strong></td>
+        <td>$full_price рублей, в том числе НДС.</td>
+    </tr>
+
+    <tr>
+        <td><strong>Условия оплаты</strong></td>
+        <td>$pay_method</td>
+    </tr>
+
+    <tr style='background-color: #00a8e6;'>
+        <td></td>
+        <td></td>
+    </tr>
+
+
+    <tr>
+        <td>Поставка</td>
+        <td>10-литровые канистры</td>
+    </tr>
+
+
+    <tr>
+        <td>  Стоимость доставки оплачивается Покупателем дополнительно, возможна комплексная
+            поставка за счет Производителя со склада в г. Нахабино, со склада г. Батайск.</td>
+
+    </tr>
+
+    <tr>
+        <td>Срок поставки</td>
+        <td>согласно договора</td>
+    </tr>
+</table>
+
+<h3>Экономическая эффективность ЭКО-СП</h3>
+<table>
+    <tr>
+        <td><strong>Планируемая урожайность, ц/га</strong></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td><strong>Планируемая стоимость, руб./т.</strong></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td><strong>Предпосевная обработка семян:</strong></td>
+        <td>
+            200 руб./литр. (EXW, со склада производства (Московская обл.), торговый склад - г. Батайск  (Ростовская область)</td>
+    </tr>
+    <tr>
+        <td><strong>Первая обработка по вегетации:</strong></td>
+        <td>$first_volume литр</td>
+        <td>$first_volume_price руб.</td>
+    </tr>
+    <tr>
+        <td><strong>Вторая обработка по вегетации:</strong></td>
+        <td>$second_volume литр</td>
+        <td>$second_volume_price руб.</td>
+    </tr>
+    <tr>
+        <td><strong>Если надо 3-я обработка</strong></td>
+        <td>$third_volume литр</td>
+        <td>$third_volume_price руб.</td>
+    </tr>
+
+    <tr style='background-color: #00a8e6;'>
+        <td></td>
+        <td></td>
+    </tr>
+
+    <tr>
+        <td><strong>Инвестиции хозяйства в покупку ЭКО-СП:</strong></td>
+        <td>$farm_investments_volume</td>
+        <td>$farm_investments_price</td>
+    </tr>
+    <tr>
+        <td><strong>Прирост урожайности:</strong></td>
+        <td>$increase_in_yield_1 %</td>
+        <td>$increase_in_yield_2 ц\га</td>
+    </tr>
+
+    <tr>
+        <td>
+            <strong>Прибавка в деньгах*</strong>
+            <em>
+                Дополнительная выручка от продажи дополнительного объема урожая полученного от увеличения урожайности.
+            </em>
+
+        </td>
+        <td>$increase_in_money руб.</td>
+
+    </tr>
+
+    <tr>
+        <td>
+            <strong>Чистая прибыль *:</strong>
+            <em>    Расчетная «чистая прибыль» от использования ЭКО-СП: дополнительная выручка минус расходы на покупку и использование «ЭКО-СП» совместно с СЗР.</em>
+        </td>
+        <td>
+            $net_profit руб.
+        </td>
+
+    </tr>
+
+    <tr>
+        <td>
+            <strong>Рентабельность гектара *:</strong>
+            <em>Экономическая эффективность использования ЭКО-СП на 1 га</em>
+        </td>
+        <td>$profitability руб.</td>
+    </tr>
+    <tr style='background-color: #00a8e6;'>
+        <td></td>
+        <td></td>
+    </tr>
+</table>
+</body>
+</html>

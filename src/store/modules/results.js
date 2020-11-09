@@ -10,7 +10,7 @@ const state = {
     seeding_rate: null,
     final_full_price: 0,
 
-    pay_method: 0,
+    pay_method: 2,
     season_discount: 0,
 
     volume_discount_result: 0,
@@ -189,8 +189,8 @@ const actions = {
     setSeedingRate({state, commit}, data) {
         commit('setSeedingRate', data)
     },
-    submitResult({state, commit}) {
-        commit('submitResult')
+    submitResult({state, commit}, type) {
+        commit('submitResult', type)
     },
 
 }
@@ -200,13 +200,15 @@ const mutations = {
     submitResult(state, payload) {
 
         axios
-            .post('mail.php', {
+            .post('m/mail.php', {
+                type: payload,
                 name: state.step_zero.name,
                 phone: state.step_zero.phone,
                 email: state.step_zero.email,
                 invite: state.step_zero.invite,
                 company: state.step_zero.company,
-                volume: state.currentVolume,
+                volume: state.current_volume,
+                base_price:state.base_price,
                 volume_discount: state.volume_discount_result * 100,
                 season_discount: state.season_discount_result * 100,
                 akkor_member_discount: state.akkor_member_discount_result *100,
@@ -217,11 +219,32 @@ const mutations = {
                 base_price_with_discount: state.final_base_price,
                 full_price: state.final_base_price * state.current_volume,
 
+                crop_area: state.step_one.crop_area,
+                prepare_volume: state.step_one.prepare.required_volume,
+                prepare_volume_price: state.step_one.prepare.required_volume*state.base_price,
+                planned_yield:state.step_three.planned_yield,
+                yield_cost:state.step_three.yield_cost,
+                seeding_rate:state.step_three.seeding_rate,
+
+                first_volume: state.step_one.vegetation.length>=1?state.step_one.vegetation[0].required_volume:0,
+                first_volume_price: state.step_one.vegetation.length>=1?state.step_one.vegetation[0].required_volume*state.base_price:0,
+                second_volume:  state.step_one.vegetation.length>=2?state.step_one.vegetation[1].required_volume:0,
+                second_volume_price: state.step_one.vegetation.length>=2?state.step_one.vegetation[1].required_volume*state.base_price:0,
+                third_volume: state.step_one.vegetation.length>=3?state.step_one.vegetation[2].required_volume:0,
+                third_volume_price: state.step_one.vegetation.length>=3?state.step_one.vegetation[2].required_volume*state.base_price:0,
+                farm_investments_volume:  state.current_volume,
+                farm_investments_price: state.current_volume*state.base_price,
+                increase_in_yield_1: state.step_three.incrace_rate,
+                increase_in_yield_2: state.step_three.increase_centners,
+                increase_in_money:  state.step_three.increase_in_money,
+                net_profit:  state.step_three.net_profit,
+                profitability: state.step_three.profitability,
+
+
+
 
             }).then(resp => {
 
-
-            console.log(resp)
             window.open(resp.data.filename, "_blank");
         });
     },
