@@ -1,5 +1,8 @@
 <?php
 
+
+
+
 namespace ekosp\calc;
 // Import PHPMailer classes into the global namespace
 // These must be at the top of your script, not inside a function
@@ -11,6 +14,9 @@ use PHPHtmlParser\Dom;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
+ini_set('error_reporting', E_ALL);
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
 // Load Composer's autoloader
 require '../vendor/autoload.php';
 
@@ -224,8 +230,10 @@ $mpdf->WriteHTML("
         <td>согласно договора</td>
     </tr>
 </table>
+");
 
-<h3 style='width:100%;text-align: center;'>Экономическая эффективность ЭКО-СП</h3>
+$mpdf->WriteHTML("
+<h3 style='width:100%;text-align: center;'>Прогнозируемая экономическая эффективность ЭКО-СП</h3>
 <table>
 <tr>
     <td><strong>Планируемая урожайность, ц/га</strong></td>
@@ -298,7 +306,7 @@ $base_price руб./литр. (EXW, со склада производства (
 <tr>
     <td colspan='2'>
     <strong>Рентабельность гектара *:</strong>
-    <em>Экономическая эффективность использования ЭКО-СП на 1 га</em>
+    <em>Прогнозируемая экономическая эффективность использования ЭКО-СП на 1 га</em>
 </td>
     <td>$profitability руб.</td>
 </tr>
@@ -352,7 +360,7 @@ try {
 
     $mail->send();
     echo json_encode([
-        "filename" => $type === 0 ? $filename_1 : $filename_2
+        "filename" => "/calc/m/".($type === 0 ? $filename_1 : $filename_2)
     ]);
 
 } catch (Exception $e) {
