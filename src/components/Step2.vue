@@ -193,15 +193,6 @@
         </div>
 
 
-        <div class="row d-flex justify-content-center w-100 mt-2">
-            <div class="col-lg-6 col-md-12 col-sm-12">
-                <button type="button" class="btn success-custom w-100" v-b-modal.modal-3>
-                    Сделать заявку /
-                    Заказать звонок
-                </button>
-            </div>
-        </div>
-
         <div class="row d-flex justify-content-center mt-2 w-100" v-if="is_show">
             <div class="col-lg-10 col-md-12 col-sm-12">
 

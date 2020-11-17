@@ -136,8 +136,16 @@
 
         <div class="dis-line"></div>
 
+        <div class="row d-flex justify-content-center w-100 mt-5">
+            <div class="col-lg-8 col-md-12 col-sm-12">
+                <button type="button" class="btn success-custom w-100" v-b-modal.modal-8>
+                    Сделать заявку /
+                    Заказать звонок
+                </button>
+            </div>
+        </div>
 
-        <div class="row d-flex justify-content-center w-100 flex-wrap mb-5">
+        <div class="row d-flex justify-content-center w-100 flex-wrap mb-2">
             <div class="col-lg-8 col-md-12 col-sm-12 mt-2">
                 <button type="button" class="btn success-custom w-100" @click="submit(1)">Сохранить файл и выслать на
                     почту
@@ -152,6 +160,34 @@
             </div>
         </div>
 
+        <b-modal id="modal-8" title="Обратная связь">
+
+            <input type="text" id="name" v-model="form_message.name" placeholder="Введите имя *" class="form-control mb-2">
+            <input type="text" id="phone" v-model="form_message.phone" placeholder="Введите телефон *"
+                   class="form-control  mb-2">
+            <p>Выбор округа: *</p>
+            <select class="form-control" v-model="form_message.region">
+                <option>Центральный ФО</option>
+                <option>Северо-Западный ФО</option>
+                <option>Южный ФО</option>
+                <option>Северо-Кавказский ФО</option>
+                <option>Приволжский ФО</option>
+                <option>Уральский ФО</option>
+                <option>Сибирский ФО</option>
+                <option>Дальневосточный ФО</option>
+            </select>
+            <br>
+            <textarea placeholder="Введите сообщение" v-model="form_message.message" class="form-control"/>
+
+            <template #modal-footer="{ ok, cancel }">
+                <b-button size="sm" variant="success" @click="sendMail()">
+                    Отправить
+                </b-button>
+                <b-button size="sm" variant="danger" @click="cancel()">
+                    Закрыть!
+                </b-button>
+            </template>
+        </b-modal>
 
         <b-modal id="modal-4" title="Информация" size="lg">
             <p>Множество агроиспытаний с научными организациями и полевые опыты в компаниях позволяют сделать следующие
@@ -196,6 +232,12 @@
                     increase_in_money: null,
                     net_profit: null,
                     profitability: null,
+                },
+                form_message: {
+                    name: '',
+                    phone: '',
+                    region: '',
+                    message: ''
                 }
             }
         },
@@ -236,6 +278,20 @@
             this.form.seeding_rate = this.seedingRate
         },
         methods: {
+            sendMail() {
+                this.$bvModal.hide('modal-8')
+                axios.post('mail_message.php', this.form_message)
+                    .then(function (response) {
+                        this.notify("Заявка успешно отправлена!")
+                    })
+                    .catch(function (error) {
+                        // handle error
+                        console.log(error);
+                    })
+                    .then(function () {
+                        // always executed
+                    });
+            },
             numberPrepare(number) {
                 return ('' + number).replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 ');
             },

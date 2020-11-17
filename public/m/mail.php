@@ -1,8 +1,6 @@
 <?php
 
 
-
-
 namespace ekosp\calc;
 // Import PHPMailer classes into the global namespace
 // These must be at the top of your script, not inside a function
@@ -11,19 +9,22 @@ use Mpdf\Mpdf;
 use Mpdf\Output\Destination;
 use NumberToWords\NumberToWords;
 use PHPHtmlParser\Dom;
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
+use Swift_Attachment;
+use Swift_Mailer;
+use Swift_Message;
+use Swift_SmtpTransport;
 
 ini_set('error_reporting', E_ALL);
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
+
 // Load Composer's autoloader
 require '../vendor/autoload.php';
 
 $filename_1 = 'KP_AGRO_' . (Carbon::now()) . '.pdf';
 $filename_2 = 'SUMMARY_TABLE_AGRO_' . (Carbon::now()) . '.pdf';
 
-$mpdf = new Mpdf(['tempDir' => __DIR__ . '/']);
+$mpdf = new Mpdf();
 
 $_POST = json_decode(file_get_contents('php://input'), true);
 
@@ -52,6 +53,8 @@ $yield_cost = $_POST['yield_cost'] ?? 0;
 
 $crop_area = $_POST['crop_area'] ?? 0;
 
+$prepare_volume = $_POST['prepare_volume'] ?? 0;
+$prepare_volume_price = $_POST['prepare_volume_price'] ?? 0;
 $first_volume = $_POST['first_volume'] ?? 0;
 $first_volume_price = $_POST['first_volume_price'] ?? 0;
 $second_volume = $_POST['second_volume'] ?? 0;
@@ -70,10 +73,10 @@ $net_profit = $_POST['net_profit'] ?? 0;
 $profitability = $_POST['profitability'] ?? 0;
 
 $dom1 = new Dom;
-$dom1->loadFromFile('../mail_template_head.html');
+$dom1->loadFromFile('mail_template_head.html');
 $html_head = $dom1->outerHtml;
 $dom2 = new Dom;
-$dom2->loadFromFile('../mail_template_footer.html');
+$dom2->loadFromFile('mail_template_footer.html');
 $html_footer = $dom2->outerHtml;
 
 
@@ -91,6 +94,8 @@ $volume_to_text = $numberTransformer->toWords(round(intval($volume))) ?? '';
 $full_price = round($full_price);
 $base_price_with_discount = round($base_price_with_discount);
 $discount_in_money = round($discount_in_money);
+$farm_investments_volume = round($farm_investments_volume);
+$farm_investments_price = round($farm_investments_price);
 
 if ($type === 0) {
     $mpdf->WriteHTML($html_head);
@@ -244,9 +249,21 @@ $mpdf->WriteHTML("
     <td colspan='2'>$yield_cost</td>
 </tr>
 <tr>
-    <td><strong>Предпосевная обработка семян:</strong></td>
+    <td rowspan='2'><strong>Предпосевная обработка семян:</strong></td>
     <td colspan='2'>
-$base_price руб./литр. (EXW, со склада производства (Московская обл.), торговый склад - г. Батайск  (Ростовская область)</td>
+$base_price руб./литр. (EXW, со склада производства (Московская обл.), торговый склад - г. Батайск  (Ростовская область)
+
+ </td>
+
+</tr>
+
+<tr>
+ <td>$prepare_volume литр. </td>
+ <td >$prepare_volume_price руб.</td>
+</tr>
+
+<tr>
+
 </tr>
 <tr>
     <td><strong>Первая обработка по вегетации:</strong></td>
@@ -271,8 +288,8 @@ $base_price руб./литр. (EXW, со склада производства (
 
 <tr>
     <td><strong>Инвестиции хозяйства в покупку ЭКО-СП:</strong></td>
-    <td>$farm_investments_volume</td>
-    <td>$farm_investments_price</td>
+    <td>$farm_investments_volume литр.</td>
+    <td>$farm_investments_price руб.</td>
 </tr>
 <tr>
     <td><strong>Прирост урожайности:</strong></td>
@@ -321,48 +338,32 @@ if ($type === 0)
     $mpdf->WriteHTML($html_footer);
 
 
-$mpdf->Output($type === 0 ? $filename_1 : $filename_2, Destination::FILE);
+$my_file = $mpdf->Output($type === 0 ? $filename_1 : $filename_2, Destination::STRING_RETURN);
 
-// Instantiation and passing `true` enables exceptions
-$mail = new PHPMailer(true);
 
-try {
-    //Server settings
-    //$mail->SMTPDebug = SMTP::DEBUG_SERVER;                      // Enable verbose debug output
-    $mail->isSMTP();                                            // Send using SMTP
-    $mail->Host = 'smtp.gmail.com';                    // Set the SMTP server to send through
-    $mail->SMTPAuth = true;                                   // Enable SMTP authentication
-    $mail->Username = 'exxxar@gmail.com';                     // SMTP username
-    $mail->Password = 'abfaymigqrkwwgow';                               // SMTP password
-    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;         // Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` encouraged
-    $mail->Port = 587;                                    // TCP port to connect to, use 465 for `PHPMailer::ENCRYPTION_SMTPS` above
+$sub = $type === 0 ? 'КОММЕРЧЕСКОЕ ПРЕДЛОЖЕНИЕ ПО ПОКУПКЕ И ПОСТАВКЕ УДОБРЕНИЯ НА ОСНОВЕ ГУМУСОВЫХ ВЕЩЕСТВ «ЭКО-СП»' :
+    'СВОДНАЯ ТАБЛИЦА ';
+$sub = "=?UTF-8?b?" . base64_encode($sub) . "?=";
 
-    //Recipients
-    $mail->setFrom('info@eko-sp.ru', 'EKO-SP');
-    $mail->addAddress($email, $name);     // Add a recipient
-    $mail->addAddress('info@eko-sp.ru');               // Name is optional
-    //$mail->addAddress('exxxar@gmail.com', "Тестировщик");               // Name is optional
-    //$mail->addReplyTo('info@example.com', 'Information');
-    //$mail->addCC('cc@example.com');
-    //$mail->addBCC('bcc@example.com');
+$body = "Добрый день, $name!\n Номер телефона:$phone \n Почта:$email \n Пригласивший: $invite \n";
 
-    // Attachments
-    $mail->addAttachment($type === 0 ? $filename_1 : $filename_2);         // Add attachments
-    //$mail->addAttachment('/tmp/image.jpg', 'new.jpg');    // Optional name
+$attachment = new Swift_Attachment($my_file, ($type === 0 ? $filename_1 : $filename_2), 'application/pdf');
 
-    // Content
-    $mail->isHTML(true);
-    $sub = $type === 0 ? 'КОММЕРЧЕСКОЕ ПРЕДЛОЖЕНИЕ ПО ПОКУПКЕ И ПОСТАВКЕ УДОБРЕНИЯ НА ОСНОВЕ ГУМУСОВЫХ ВЕЩЕСТВ «ЭКО-СП»' :
-        'СВОДНАЯ ТАБЛИЦА ';
-    $mail->Subject = "=?UTF-8?b?" . base64_encode($sub) . "?=";
-    $mail->Body = "Добрый день, $name!<br>Номер телефона:$phone<br>Почта:$email<br>Пригласивший: $invite<br>";
-    $mail->AltBody = 'Данный тип не поддерживается';
 
-    $mail->send();
-    echo json_encode([
-        "filename" => "/calc/m/".($type === 0 ? $filename_1 : $filename_2)
-    ]);
+$message = (new Swift_Message())
+    ->setSubject($sub)
+    ->setFrom(array('info@eko-sp.ru' => 'EKO-SP'))
+    ->setTo(array($email => $name, 'exxxar@gmail.com' => 'A Tester'))
+    ->setBody($body)
+    ->attach($attachment);
 
-} catch (Exception $e) {
-    echo "Ошибочка: {$mail->ErrorInfo}";
-}
+$transport = (new Swift_SmtpTransport('smtp.gmail.com', 587,'tls'))
+    ->setUsername('exxxar@gmail.com')
+    ->setPassword('abfaymigqrkwwgow');
+
+$mailer = new Swift_Mailer($transport);
+
+$mailer->send($message);
+
+$mpdf->Output(($type === 0 ? $filename_1 : $filename_2), 'I');
+
