@@ -96,6 +96,8 @@ $base_price_with_discount = round($base_price_with_discount);
 $discount_in_money = round($discount_in_money);
 $farm_investments_volume = round($farm_investments_volume);
 $farm_investments_price = round($farm_investments_price);
+$prepare_volume = round($prepare_volume);
+$prepare_volume_price = round($prepare_volume_price);
 
 if ($type === 0) {
     $mpdf->WriteHTML($html_head);

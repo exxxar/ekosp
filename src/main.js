@@ -10,6 +10,7 @@ import VueScrollTo from 'vue-scrollto';
 Vue.use(VueScrollTo)
 window.$ = require("jquery")
 window.axios = require('axios').default;
+window.FileDownload = require('js-file-download');
 
 Vue.use(Vuex);
 Vue.use(Notifications)

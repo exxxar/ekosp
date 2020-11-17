@@ -208,10 +208,10 @@ const mutations = {
                 invite: state.step_zero.invite,
                 company: state.step_zero.company,
                 volume: state.current_volume,
-                base_price:state.base_price,
+                base_price: state.base_price,
                 volume_discount: state.volume_discount_result * 100,
                 season_discount: state.season_discount_result * 100,
-                akkor_member_discount: state.akkor_member_discount_result *100,
+                akkor_member_discount: state.akkor_member_discount_result * 100,
                 pay_method_discount: state.pay_method_result * 100,
                 pay_method: state.pay_method_result_text,
                 summary_discount: state.summary_discount,
@@ -221,31 +221,29 @@ const mutations = {
 
                 crop_area: state.step_one.crop_area,
                 prepare_volume: state.step_one.prepare.required_volume,
-                prepare_volume_price: state.step_one.prepare.required_volume*state.base_price,
-                planned_yield:state.step_three.planned_yield,
-                yield_cost:state.step_three.yield_cost,
-                seeding_rate:state.step_three.seeding_rate,
+                prepare_volume_price: state.step_one.prepare.required_volume * state.base_price,
+                planned_yield: state.step_three.planned_yield,
+                yield_cost: state.step_three.yield_cost,
+                seeding_rate: state.step_three.seeding_rate,
 
-                first_volume: state.step_one.vegetation.length>=1?state.step_one.vegetation[0].required_volume:0,
-                first_volume_price: state.step_one.vegetation.length>=1?state.step_one.vegetation[0].required_volume*state.base_price:0,
-                second_volume:  state.step_one.vegetation.length>=2?state.step_one.vegetation[1].required_volume:0,
-                second_volume_price: state.step_one.vegetation.length>=2?state.step_one.vegetation[1].required_volume*state.base_price:0,
-                third_volume: state.step_one.vegetation.length>=3?state.step_one.vegetation[2].required_volume:0,
-                third_volume_price: state.step_one.vegetation.length>=3?state.step_one.vegetation[2].required_volume*state.base_price:0,
-                farm_investments_volume:  state.current_volume,
-                farm_investments_price: state.current_volume*state.base_price,
+                first_volume: state.step_one.vegetation.length >= 1 ? state.step_one.vegetation[0].required_volume : 0,
+                first_volume_price: state.step_one.vegetation.length >= 1 ? state.step_one.vegetation[0].required_volume * state.base_price : 0,
+                second_volume: state.step_one.vegetation.length >= 2 ? state.step_one.vegetation[1].required_volume : 0,
+                second_volume_price: state.step_one.vegetation.length >= 2 ? state.step_one.vegetation[1].required_volume * state.base_price : 0,
+                third_volume: state.step_one.vegetation.length >= 3 ? state.step_one.vegetation[2].required_volume : 0,
+                third_volume_price: state.step_one.vegetation.length >= 3 ? state.step_one.vegetation[2].required_volume * state.base_price : 0,
+                farm_investments_volume: state.current_volume,
+                farm_investments_price: state.current_volume * state.base_price,
                 increase_in_yield_1: state.step_three.incrace_rate,
                 increase_in_yield_2: state.step_three.increase_centners,
-                increase_in_money:  state.step_three.increase_in_money,
-                net_profit:  state.step_three.net_profit,
+                increase_in_money: state.step_three.increase_in_money,
+                net_profit: state.step_three.net_profit,
                 profitability: state.step_three.profitability,
 
 
-
-
-            }).then(resp => {
-
-            window.open(resp.data.filename, "_blank");
+            }, {responseType: 'blob'}).then(resp => {
+            FileDownload(resp.data, 'report.pdf');
+            //window.open(resp.data.filename, "_blank");
         });
     },
     setSeedingRate(state, payload) {
@@ -261,9 +259,6 @@ const mutations = {
         state.step_one = payload;
         state.current_volume = payload.summary_required_volume
         state.crop_area = payload.crop_area
-
-
-
 
 
     },

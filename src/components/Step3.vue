@@ -280,7 +280,7 @@
         methods: {
             sendMail() {
                 this.$bvModal.hide('modal-8')
-                axios.post('mail_message.php', this.form_message)
+                axios.post('m/mail_message.php', this.form_message)
                     .then(function (response) {
                         this.notify("Заявка успешно отправлена!")
                     })
