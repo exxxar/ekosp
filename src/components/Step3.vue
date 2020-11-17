@@ -103,7 +103,8 @@
                     руб
                 </h5>
             </div>
-            <div class="w-100"></div>
+        </div>
+        <div class="row d-flex align-items-center w-100 flex-column w-100 rez-panel">
             <div class="col-lg-8 col-md-12 col-sm-12">
                 <p>Дополнительная выручка от продажи дополнительного объема урожая полученного от увеличения
                     урожайности.</p>
@@ -115,7 +116,8 @@
                 <h5 class="w-100">Чистая прибыль <strong class="text-danger">*</strong>: <span>{{numberPrepare(getNetProfit())}}</span>
                     руб</h5>
             </div>
-            <div class="w-100"></div>
+        </div>
+        <div class="row d-flex align-items-center w-100 flex-column w-100 rez-panel">
             <div class="col-lg-8 col-md-12 col-sm-12">
                 <p>Расчетная «чистая прибыль» от использования ЭКО-СП: дополнительная выручка минус расходы на покупку и
                     использование «ЭКО-СП» совместно с СЗР.</p>
@@ -127,7 +129,8 @@
                 <h5>Рентабельность гектара <strong class="text-danger">*</strong>: <span>{{numberPrepare(getProfitability())}}</span>
                     руб</h5>
             </div>
-            <div class="w-100"></div>
+        </div>
+        <div class="row d-flex align-items-center w-100 flex-column w-100 rez-panel">
             <div class="col-lg-8 col-md-12 col-sm-12">
                 <p>Экономическая эффективность использования ЭКО-СП на 1 га</p>
             </div>
@@ -162,7 +165,8 @@
 
         <b-modal id="modal-8" title="Обратная связь">
 
-            <input type="text" id="name" v-model="form_message.name" placeholder="Введите имя *" class="form-control mb-2">
+            <input type="text" id="name" v-model="form_message.name" placeholder="Введите имя *"
+                   class="form-control mb-2">
             <input type="text" id="phone" v-model="form_message.phone" placeholder="Введите телефон *"
                    class="form-control  mb-2">
             <p>Выбор округа: *</p>
