@@ -107,7 +107,19 @@
             },
         },
         mounted() {
-            this.form = this.zero
+            if (this.zero)
+                this.form = this.zero
+            else
+                this.form = {
+                    required: true,
+                    company: '',
+                    region: '',
+                    name: '',
+                    phone: '',
+                    email: '',
+                    invite: '',
+                }
+
         },
         methods: {
             submit() {

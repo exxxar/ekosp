@@ -201,7 +201,7 @@
                        type="text"
 
                        class="form-control form-control-lg"
-                       placeholder="Название компании" required>
+                       placeholder="Название компании" >
             </div>
 
             <div class="form-group">
@@ -209,7 +209,7 @@
                        v-model="form_auth.region"
                        type="text"
                        class="form-control form-control-lg"
-                       placeholder="Регион" required>
+                       placeholder="Регион" >
             </div>
 
             <div class="form-group">
@@ -217,7 +217,7 @@
                        v-model="form_auth.name"
                        type="text"
                        class="form-control form-control-lg"
-                       placeholder="ФИО" required>
+                       placeholder="ФИО" >
             </div>
 
             <div class="form-group">
@@ -226,7 +226,7 @@
                        maxlength="19"
                        type="text"
                        class="form-control form-control-lg"
-                       placeholder="Номер телефона" required>
+                       placeholder="Номер телефона" >
             </div>
 
 
@@ -251,11 +251,11 @@
             </div>
 
             <template #modal-footer="{ ok, cancel }">
-                <b-button size="sm" variant="success" @click="submit2(0)">
+                <b-button size="sm" variant="success" @click="submit2(0)" :disabled="form_auth.email.trim().length==0">
                     Отправить на почту
                 </b-button>
 
-                <b-button size="sm" variant="info" @click="submit2(1)">
+                <b-button size="sm" variant="info" @click="submit2(1)" :disabled="form_auth.email.trim().length==0">
                     Сохранить файл
                 </b-button>
 
@@ -298,7 +298,7 @@
             return {
                 vegetation: [0, 7, 11, 12.4],
                 form_auth: {
-                    required:true,
+                    required:false,
                     company: '',
                     region: '',
                     name: '',
