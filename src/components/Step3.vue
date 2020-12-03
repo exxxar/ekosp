@@ -234,6 +234,7 @@
                 <input name="email"
                        v-model="form_auth.email"
                        type="email"
+                       id="modal-email"
                        class="form-control form-control-lg"
                        placeholder="Email" required>
             </div>
@@ -251,11 +252,11 @@
             </div>
 
             <template #modal-footer="{ ok, cancel }">
-                <b-button size="sm" variant="success" @click="submit2(0)" :disabled="form_auth.email.trim().length==0">
+                <b-button size="sm" variant="success" @click="submit2(0)" :disabled="email_is_not_valid">
                     Отправить на почту
                 </b-button>
 
-                <b-button size="sm" variant="info" @click="submit2(1)" :disabled="form_auth.email.trim().length==0">
+                <b-button size="sm" variant="info" @click="submit2(1)" :disabled="email_is_not_valid">
                     Сохранить файл
                 </b-button>
 
@@ -281,7 +282,7 @@
                 При обработке по полному циклу (обработка семян и 3 обработки по вегетации) увеличение урожайности в
                 среднем оставляет - <span class="text-primary font-weight-bold">14,3%</span>. </p>
             <p class="text-danger font-weight-bold">
-                <em>Увеличивайте урожайность – зарабатывайте больше!</em></p>
+                <em >Увеличивайте урожайность – зарабатывайте больше!</em></p>
 
             <template #modal-footer="{ cancel }">
                 <b-button size="sm" variant="info" @click="cancel()">
@@ -296,6 +297,7 @@
     export default {
         data() {
             return {
+                email_is_not_valid:true,
                 vegetation: [0, 7, 11, 12.4],
                 form_auth: {
                     required:false,
@@ -326,7 +328,16 @@
             }
         },
         watch: {
-
+            'form_auth.email':function (newVal) {
+                if (newVal.trim().length==0||newVal.indexOf("@")==-1) {
+                    document.getElementById("modal-email").classList.add("border-danger")
+                    this.email_is_not_valid = true
+                }
+                else {
+                    document.getElementById("modal-email").classList.remove("border-danger")
+                    this.email_is_not_valid = false
+                }
+            },
             'form.seeding_rate': function (newVal) {
                 this.$store.dispatch("setSeedingRate", newVal)
             }

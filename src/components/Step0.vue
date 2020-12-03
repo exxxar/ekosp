@@ -12,8 +12,8 @@
             подарок!</strong><br>
             (при покупке от 100 литров)</h6>
 
-        <div class="col-md-8 col-sm-12 mb-2 d-flex justify-content-center">
-            <div class="custom-control custom-switch">
+        <div class="col-md-8 col-sm-12 mb-2 d-flex justify-content-center" v-if="is_show">
+            <div class="custom-control custom-switch" >
                 <input type="checkbox" class="custom-control-input" id="customSwitch1" v-model="form.required">
                 <label class="custom-control-label" for="customSwitch1" v-if="form.required">Не проходить
                     авторизацию</label>
