@@ -193,6 +193,78 @@
             </template>
         </b-modal>
 
+        <b-modal id="modal-9" title="Авторизация">
+
+            <div class="form-group">
+                <input name="company"
+                       v-model="form_auth.company"
+                       type="text"
+
+                       class="form-control form-control-lg"
+                       placeholder="Название компании" required>
+            </div>
+
+            <div class="form-group">
+                <input name="region"
+                       v-model="form_auth.region"
+                       type="text"
+                       class="form-control form-control-lg"
+                       placeholder="Регион" required>
+            </div>
+
+            <div class="form-group">
+                <input name="name"
+                       v-model="form_auth.name"
+                       type="text"
+                       class="form-control form-control-lg"
+                       placeholder="ФИО" required>
+            </div>
+
+            <div class="form-group">
+                <input name="phone"
+                       v-model="form_auth.phone"
+                       maxlength="19"
+                       type="text"
+                       class="form-control form-control-lg"
+                       placeholder="Номер телефона" required>
+            </div>
+
+
+            <div class="form-group">
+                <input name="email"
+                       v-model="form_auth.email"
+                       type="email"
+                       class="form-control form-control-lg"
+                       placeholder="Email" required>
+            </div>
+
+            <div class="form-group">
+                <label class="pull-left" for="invite">Код приглашения <span style="color:#f00;">(если отсутствует - пропустить)</span>:</label>
+                <input name="invite"
+                       v-model="form_auth.invite"
+                       type="text"
+                       pattern="[AM].[0-9]{1,2}"
+                       maxlength="19"
+                       v-mask="['A ##']"
+                       class="form-control form-control-lg"
+                       id="invite" placeholder="">
+            </div>
+
+            <template #modal-footer="{ ok, cancel }">
+                <b-button size="sm" variant="success" @click="submit2(0)">
+                    Отправить на почту
+                </b-button>
+
+                <b-button size="sm" variant="info" @click="submit2(1)">
+                    Сохранить файл
+                </b-button>
+
+                <b-button size="sm" variant="danger" @click="cancel()">
+                    Закрыть!
+                </b-button>
+            </template>
+        </b-modal>
+
         <b-modal id="modal-4" title="Информация" size="lg">
             <p>Множество агроиспытаний с научными организациями и полевые опыты в компаниях позволяют сделать следующие
                 выводы об увеличении урожайности препаратом «ЭКО-СП»:</p>
@@ -225,7 +297,15 @@
         data() {
             return {
                 vegetation: [0, 7, 11, 12.4],
-
+                form_auth: {
+                    required:true,
+                    company: '',
+                    region: '',
+                    name: '',
+                    phone: '',
+                    email: '',
+                    invite: '',
+                },
                 form: {
                     crop_area: null,
                     seeding_rate: null,
@@ -349,13 +429,27 @@
 
                 return result;
             },
-            submit(type) {
+            submit2(type){
+                this.$bvModal.hide('modal-9')
+                this.$store.dispatch('setStepZero', this.form_auth)
                 this.$store.dispatch("setStepThree", this.form)
                 this.$store.dispatch("submitResult", type)
                 this.notify(type === 0 ?
                     "Заявка успешно отправлена! Спасибо что выбрали нас!" :
                     "Мы генерируем результат и отправляем его Вам на почту!"
                 )
+            },
+            submit(type) {
+                if (!this.zero.required)
+                    this.$bvModal.show('modal-9')
+                else {
+                    this.$store.dispatch("setStepThree", this.form)
+                    this.$store.dispatch("submitResult", type)
+                    this.notify(type === 0 ?
+                        "Заявка успешно отправлена! Спасибо что выбрали нас!" :
+                        "Мы генерируем результат и отправляем его Вам на почту!"
+                    )
+                }
             },
             notify(text) {
                 this.$notify({

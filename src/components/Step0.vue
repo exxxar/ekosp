@@ -1,17 +1,26 @@
 <template>
-    <form v-on:submit.prevent="submit" class="row d-flex justify-content-center m-0 p-2 w-100" id="step0" >
+    <form v-on:submit.prevent="submit" class="row d-flex justify-content-center m-0 p-2 w-100" id="step0">
 
         <img src="images/blue-block.png" class="d-none d-md-block img-fluid" alt=""/>
         <img src="images/blue-block-m.png" class="d-block d-md-none img-fluid" alt=""/>
 
-        <h5 class="mb-5 mt-5 col-md-8">Уважаемый клиент, для более детального расчёта и дальнейшей более качественной коммуникации введите Ваши
+        <h5 class="mb-5 mt-5 col-md-8">Уважаемый клиент, для более детального расчёта и дальнейшей более качественной
+            коммуникации введите Ваши
             контактные данные.</h5>
 
-        <h6 class="mb-5 col-md-8"><strong>Заполните контактные данные и получите 10 литров «ЭКО-СП» в подарок!</strong><br>
+        <h6 class="mb-5 col-md-8"><strong>Заполните контактные данные и получите 10 литров «ЭКО-СП» в
+            подарок!</strong><br>
             (при покупке от 100 литров)</h6>
 
-
-        <div class="col-md-8 col-sm-12">
+        <div class="col-md-8 col-sm-12 mb-2 d-flex justify-content-center">
+            <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="customSwitch1" v-model="form.required">
+                <label class="custom-control-label" for="customSwitch1" v-if="form.required">Не проходить
+                    авторизацию</label>
+                <label class="custom-control-label" for="customSwitch1" v-else>Пройти авторизацию</label>
+            </div>
+        </div>
+        <div class="col-md-8 col-sm-12" v-if="form.required">
             <div class="form-group">
                 <input name="company"
                        v-model="form.company"
@@ -68,7 +77,8 @@
             </div>
         </div>
 
-        <button type="submit" class="btn btn-primary primary-custom" v-if="is_show">ШАГ 1: Расчет необходимого объема препарата
+        <button type="submit" class="btn btn-primary primary-custom" v-if="is_show">ШАГ 1: Расчет необходимого объема
+            препарата
             «ЭКО-СП»
         </button>
     </form>
@@ -81,6 +91,7 @@
             return {
                 is_show: true,
                 form: {
+                    required: true,
                     company: '',
                     region: '',
                     name: '',
@@ -90,12 +101,19 @@
                 }
             }
         },
+        computed: {
+            zero: function () {
+                return this.$store.getters.Zero
+            },
+        },
+        mounted() {
+            this.form = this.zero
+        },
         methods: {
             submit() {
                 this.$store.dispatch('setStepZero', this.form)
                 this.is_show = false;
                 this.$emit("next-step")
-
 
             }
         },

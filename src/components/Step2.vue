@@ -469,4 +469,15 @@
     .bg-success-custom {
         background: #15b833;
     }
+
+    [name="humiccost"]{
+        border: 2px #0785bb  solid;
+
+        & + .input-group-append span {
+            border: 2px #0785bb  solid;
+            background: #0785bb;
+            color:white;
+            font-weight: 800;
+        }
+    }
 </style>
